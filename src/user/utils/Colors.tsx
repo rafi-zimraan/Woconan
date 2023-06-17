@@ -1,0 +1,12 @@
+export const Grey = '#424242';
+export const GreyLight = '#f5f5f5';
+export const Blue = '#007AFF';
+export const White = '#ffffff';
+export const Black = '#000000';
+export const krem = '#169C89';
+export const lightGray = '#C4C4C4';
+export const AbuABu = '#999999';
+export const lightGreen = '#169C89';
+export const Abu = '#4D4D4D';
+export const Abu2 = '#8f8989';
+export const KremMuda = '#11fad7';

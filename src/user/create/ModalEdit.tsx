@@ -1,0 +1,237 @@
+import {
+  StyleSheet,
+  View,
+  Modal,
+  Text,
+  ToastAndroid,
+  Image,
+  TouchableNativeFeedback,
+  TextInput,
+  Button,
+  ScrollView,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
+import React, {useState} from 'react';
+import {Grey, White, krem} from '../utils/Colors';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {launchImageLibrary} from 'react-native-image-picker';
+import axios from 'axios';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParams} from '../../App';
+
+interface Props {
+  visible: boolean;
+  id: number;
+}
+
+const ModalEdit: React.FC<Props> = ({visible, id}) => {
+  const [judul, setJudul] = useState<string>('');
+  const [descripsi, setDescripsi] = useState<string>('');
+  const [loading, setLoading] = useState<any>(false);
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParams>>();
+
+  const [gambar, setGambar] = useState({
+    uri: '',
+    name: null,
+    type: null,
+  });
+
+  // {Image pickersdsdsdsd}
+  async function chooseImage() {
+    try {
+      const {assets}: {assets?: any[]} = await launchImageLibrary({
+        mediaType: 'photo',
+        quality: 0.1,
+      });
+      const {fileName: name, type, uri} = assets![0];
+      setGambar({uri, name, type});
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const Update = () => {
+    AsyncStorage.getItem('token').then(value => {
+      var myHeaders = new Headers();
+      myHeaders.append('Content-Type', 'application/json');
+      myHeaders.append('Authorization', `Bearer${value}`);
+
+      var formdata = new FormData();
+      formdata.append('gambar', gambar);
+      formdata.append('judul', judul);
+      formdata.append('deskripsi', descripsi);
+
+      var requestOptions = {
+        method: 'POST',
+        body: formdata,
+        redirect: 'follow',
+        headers: {
+          Authorization: `Bearer ${value}`,
+          'Content-Type': 'multipart/form-data',
+          Accept: 'application/json',
+        },
+      };
+
+      fetch(
+        `https://c013-2001-448a-4044-4106-7ac4-d406-8376-46f5.ngrok-free.app/api/update-postingan/${id}`,
+        requestOptions,
+      )
+        .then(response => response.json())
+        .then(result => {
+          console.log(result);
+          navigation.goBack();
+          ToastAndroid.show(
+            'Anda berhasil uptade postingan ',
+            ToastAndroid.SHORT,
+          );
+        })
+        .catch(error => console.log('error', error));
+    });
+  };
+
+  // const handleUpdate = async () => {
+  //   setLoading(true);
+
+  //   try {
+  //     const token = await getToken();
+
+  //     const formdata = new FormData();
+  //     formdata.append('gambar', gambar);
+  //     formdata.append('judul', judul);
+  //     formdata.append('deskripsi', descripsi);
+
+  //     const {data} = await axios.post(
+  //       `https://33c4-2001-448a-404b-1e88-33b0-a341-9878-70a.ngrok-free.app/api/update-postingan/${id}`,
+  //       formdata,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //           'Content-Type': 'multipart/form-data',
+  //           Accept: 'application/json',
+  //         },
+  //       },
+  //     );
+  //     console.log('RESPONSE', data);
+  //     ToastAndroid.show('Data berhasil di perbarui', ToastAndroid.SHORT);
+  //   } catch (error: any) {
+  //     console.log('ERROR', error.message);
+  //     ToastAndroid.show('Gagal perbarui data', ToastAndroid.SHORT);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  return (
+    <Modal visible={visible}>
+      <ScrollView style={styles.Container}>
+        <View>
+          <View style={styles.HeaderImagePicker}>
+            <Image
+              source={{uri: gambar.uri}}
+              style={{
+                width: wp('40%'),
+                height: hp('34%'),
+              }}
+            />
+          </View>
+          <TouchableNativeFeedback onPress={chooseImage}>
+            <View style={styles.ViewCamera}>
+              <Image
+                source={require('../icon/camera.png')}
+                style={styles.camera}
+              />
+            </View>
+          </TouchableNativeFeedback>
+          <View style={styles.TextInput}>
+            <View style={styles.HeaderView}>
+              <Icon
+                name="chart-bubble"
+                size={26}
+                color="#888"
+                style={styles.IconPlasholder}
+              />
+              <TextInput
+                style={{height: hp('5%'), width: wp('40%')}}
+                placeholder="Judul"
+                onChangeText={val => setJudul(val)}
+              />
+            </View>
+            <View style={styles.HeaderView}>
+              <TextInput
+                style={{height: hp('25%'), width: wp('90%')}}
+                placeholder="Descripsi"
+                onChangeText={val => setDescripsi(val)}
+              />
+            </View>
+          </View>
+          <TouchableOpacity
+            style={styles.Submit}
+            onPress={Update}
+            disabled={loading}>
+            <Text style={styles.txt3}>Submit</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </Modal>
+  );
+};
+
+export default ModalEdit;
+
+const styles = StyleSheet.create({
+  Container: {
+    flex: 1,
+    backgroundColor: Grey,
+  },
+  HeaderImagePicker: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  ViewCamera: {
+    alignItems: 'center',
+    marginTop: '1%',
+  },
+  camera: {
+    height: hp('5%'),
+    width: wp('10%'),
+  },
+  HeaderView: {
+    flexDirection: 'row',
+    backgroundColor: White,
+    borderRadius: 20,
+    marginTop: '2%',
+  },
+  TextInput: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  IconPlasholder: {
+    marginHorizontal: 10,
+    marginTop: '2%',
+  },
+  Submit: {
+    backgroundColor: krem,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    elevation: 6,
+    marginTop: '4%',
+    marginHorizontal: 90,
+    width: wp('60%'),
+    height: hp('6%'),
+  },
+  txt3: {
+    color: White,
+    fontSize: hp('2.4%'),
+    fontWeight: '700',
+  },
+});
