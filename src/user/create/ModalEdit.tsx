@@ -45,7 +45,7 @@ const ModalEdit: React.FC<Props> = ({visible, id}) => {
     type: null,
   });
 
-  // {Image pickersdsdsdsd}
+  // {'Image picker'}
   async function chooseImage() {
     try {
       const {assets}: {assets?: any[]} = await launchImageLibrary({
@@ -93,38 +93,6 @@ const ModalEdit: React.FC<Props> = ({visible, id}) => {
         .catch(error => console.log('error', error));
     });
   };
-
-  // const handleUpdate = async () => {
-  //   setLoading(true);
-
-  //   try {
-  //     const token = await getToken();
-
-  //     const formdata = new FormData();
-  //     formdata.append('gambar', gambar);
-  //     formdata.append('judul', judul);
-  //     formdata.append('deskripsi', descripsi);
-
-  //     const {data} = await axios.post(
-  //       `https://33c4-2001-448a-404b-1e88-33b0-a341-9878-70a.ngrok-free.app/api/update-postingan/${id}`,
-  //       formdata,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //           'Content-Type': 'multipart/form-data',
-  //           Accept: 'application/json',
-  //         },
-  //       },
-  //     );
-  //     console.log('RESPONSE', data);
-  //     ToastAndroid.show('Data berhasil di perbarui', ToastAndroid.SHORT);
-  //   } catch (error: any) {
-  //     console.log('ERROR', error.message);
-  //     ToastAndroid.show('Gagal perbarui data', ToastAndroid.SHORT);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   return (
     <Modal visible={visible}>

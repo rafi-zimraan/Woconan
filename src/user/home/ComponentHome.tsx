@@ -48,7 +48,7 @@ const ComponentHome = () => {
         },
       };
       fetch(
-        'https://bffb-2001-448a-4044-4106-ab38-f229-1e5f-c8c3.ngrok-free.app/api/logout',
+        'https://baeb-2001-448a-404c-1cd1-a02a-fe39-5413-1026.ngrok-free.app/api/logout',
         requestOptions,
       )
         .then(response => response.text())
@@ -94,13 +94,13 @@ const ComponentHome = () => {
       console.log('Ini token', value);
 
       var requestOptions = {
-        method: 'GET',
+        method: 'POST',
         headers: {
           Authorization: `Bearer ${value}`,
         },
       };
       fetch(
-        'https://5b08-2001-448a-4044-4106-921b-b8e7-cae1-bde1.ngrok-free.app/api/beranda-user',
+        'https://baeb-2001-448a-404c-1cd1-a02a-fe39-5413-1026.ngrok-free.app/api/beranda-user',
         requestOptions,
       )
         .then(response => response.json())
@@ -164,7 +164,6 @@ const ComponentHome = () => {
   const navigationDrawer = (
     <View
       style={{
-        flex: 1,
         flexDirection: 'row',
         marginTop: '6%',
         alignItems: 'flex-start',

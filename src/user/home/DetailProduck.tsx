@@ -41,7 +41,7 @@ const DetailProduck = ({route}: Navigation) => {
     console.log(route.params?.no_id);
     AsyncStorage.getItem('token').then(value => {
       var requestOptions = {
-        method: 'GET',
+        method: 'POST',
         redirect: 'follow',
         headers: {
           Authorization: `Bearer ${value}`,
@@ -49,7 +49,7 @@ const DetailProduck = ({route}: Navigation) => {
       };
 
       fetch(
-        `https://5b08-2001-448a-4044-4106-921b-b8e7-cae1-bde1.ngrok-free.app/api/read-user/${route.params?.no_id}`,
+        `https://baeb-2001-448a-404c-1cd1-a02a-fe39-5413-1026.ngrok-free.app/api/read-user/${route.params?.no_id}`,
         requestOptions,
       )
         .then(response => response.json())

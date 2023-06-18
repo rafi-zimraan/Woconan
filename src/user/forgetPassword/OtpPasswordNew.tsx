@@ -51,22 +51,7 @@ const OtpPasswordNew = () => {
   };
 
   const handleOtpEmail = () => {
-    if (email === '') {
-      Alert.alert('Perhatian !!', 'Anda harus mengisi from email dahulu', [
-        {
-          text: 'ok',
-        },
-      ]);
-    } else if (
-      email.split('@')[1] !== 'gmail.com' &&
-      email.split('@')[1] !== 'email.com'
-    ) {
-      Alert.alert('Perhatian !!', 'Email wajib mengunakan "gmail.com" ', [
-        {
-          text: 'ok',
-        },
-      ]);
-    } else if (!toggleCheckBox) {
+    if (!toggleCheckBox) {
       Alert.alert('Perhatian !', 'Anda harus checklist kotak di bawah', [
         {
           text: 'OK',
@@ -75,7 +60,6 @@ const OtpPasswordNew = () => {
     } else {
       AsyncStorage.getItem('token').then(value => {
         var formdata = new FormData();
-        formdata.append('email', email);
         formdata.append('otp', otp);
 
         var requestOptions = {
@@ -87,7 +71,7 @@ const OtpPasswordNew = () => {
           },
         };
         fetch(
-          'https://c013-2001-448a-4044-4106-7ac4-d406-8376-46f5.ngrok-free.app/api/verifikasi-reset',
+          'https://baeb-2001-448a-404c-1cd1-a02a-fe39-5413-1026.ngrok-free.app/api/verifikasi-reset',
           requestOptions,
         )
           .then(response => response.json())
@@ -118,26 +102,6 @@ const OtpPasswordNew = () => {
         <Text style={styles.TextHeader}>Lihat email anda, </Text>
         <Text style={styles.TextHeader2}>Now!</Text>
       </View>
-      <View style={styles.HeaderEmail}>
-        <Text style={styles.TextEmail}>
-          Masukan Email anda terlebih dahulu!!
-        </Text>
-      </View>
-      <View style={styles.ContentTextInput}>
-        <View style={styles.ViewTextInput}>
-          <Icon
-            name="email-outline"
-            size={26}
-            color="#FF9125"
-            style={styles.Icon}
-          />
-          <TextInput
-            style={styles.TextInput}
-            placeholder="Masukan email anda"
-            onChangeText={val => setEmail(val)}
-          />
-        </View>
-      </View>
       <View style={{paddingHorizontal: 20}}>
         <View>
           <Text style={styles.TxtOtp}>
@@ -145,7 +109,6 @@ const OtpPasswordNew = () => {
             yang telah terkirim ke Email anda.
           </Text>
         </View>
-
         <View style={styles.container}>
           {Array.from({length: 6}, (_, index) => (
             <TextInput

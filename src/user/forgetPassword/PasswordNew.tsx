@@ -85,13 +85,13 @@ const PasswordNew = () => {
           },
         };
         fetch(
-          'https://45a9-2001-448a-4044-4106-14a4-81df-5764-fb28.ngrok-free.app/api/password-baru',
+          'https://baeb-2001-448a-404c-1cd1-a02a-fe39-5413-1026.ngrok-free.app/api/password-baru',
           requestOptions,
         )
           .then(response => response.json())
           .then(result => {
             console.log(result);
-            if (result.message === 'kode otp tidak valid') {
+            if (result.message === 'User not found') {
               Alert.alert(
                 'peringatan',
                 'Maaf password atau Email yang anda masukan salah',

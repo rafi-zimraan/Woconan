@@ -34,7 +34,7 @@ interface ProfileUser {
 const ComponentProfile = () => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(true);
   // const [data, setData] = useState<listData[]>([]);
-  const [data, setData] = useState<ProfileUser[]>([]);
+  const [dataPhoto, setDataPhoto] = useState<ProfileUser | null>(null);
   const [name, setName] = useState<any>();
   const [gambar, setGambar] = useState<string>('');
 
@@ -44,6 +44,10 @@ const ComponentProfile = () => {
 
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParams>>();
+
+  // useEffect(() => {
+
+  // })
 
   // ['Api Profile User']
   const ProfileUser = () => {
@@ -55,7 +59,7 @@ const ComponentProfile = () => {
       formdata.append('name', name);
 
       var requestOptions = {
-        method: 'GET',
+        method: 'POST',
         body: formdata,
         redirect: 'follow',
         headers: {
@@ -64,31 +68,31 @@ const ComponentProfile = () => {
       };
 
       fetch(
-        'https://5b08-2001-448a-4044-4106-921b-b8e7-cae1-bde1.ngrok-free.app/api/index-profil/5',
+        'https://baeb-2001-448a-404c-1cd1-a02a-fe39-5413-1026.ngrok-free.app/api/index-profil/5',
         requestOptions,
       )
         .then(response => response.json())
         .then(result => {
           console.log(result);
-          setData(result.data);
+          setDataPhoto(result.dataPhoto);
         })
         .catch(error => console.log('error', error));
     });
   };
 
-  // {'Read'}
+  // {'READ'}
   // useEffect(() => {
   //   AsyncStorage.getItem('token').then(value => {
   //     console.log('Ini token', value);
 
   //     var requestOptions = {
-  //       method: 'GET',
+  //       method: 'POST',
   //       headers: {
   //         Authorization: `Bearer ${value}`,
   //       },
   //     };
   //     fetch(
-  //       'https://5b08-2001-448a-4044-4106-921b-b8e7-cae1-bde1.ngrok-free.app/api/beranda-user',
+  //       'https://baeb-2001-448a-404c-1cd1-a02a-fe39-5413-1026.ngrok-free.app/api/beranda-user',
   //       requestOptions,
   //     )
   //       .then(response => response.json())
@@ -135,12 +139,12 @@ const ComponentProfile = () => {
 
       {/* CONTAINER FROFILE */}
       <View style={styles.Header}>
-        <TouchableOpacity onPress={() => navigation.navigate('homeAdmin')}>
+        {/* <TouchableOpacity onPress={() => navigation.navigate('homeAdmin')}>
           <Image source={require('../icon/user.png')} style={styles.Img} />
         </TouchableOpacity>
-        <Text style={styles.Txt}>Profile</Text>
-        <View>
-          {data.map((idn, index) => (
+        <Text style={styles.Txt}>Profile</Text> */}
+        {/* <View>
+          {dataPhoto.map((idn, index) => (
             <View key={index}>
               <TouchableOpacity onPress={ProfileUser}>
                 <Image source={{uri: idn.gambar}} style={styles.Img} />
@@ -148,7 +152,7 @@ const ComponentProfile = () => {
               <Text>{idn.name}</Text>
             </View>
           ))}
-        </View>
+        </View> */}
         <View style={styles.HeaderTextProfile}>
           <View style={styles.ContentView}>
             <Text style={styles.TxtContent}>1</Text>
