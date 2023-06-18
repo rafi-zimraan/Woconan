@@ -19,15 +19,24 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParams} from '../../App';
 import Modal from 'react-native-modal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import index from '../imageFlatlist';
 
 interface listData {
   id: number;
   gambar: string;
 }
 
+interface ProfileUser {
+  gambar: string;
+  name: any;
+}
+
 const ComponentProfile = () => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(true);
-  const [data, setData] = useState<listData[]>([]);
+  // const [data, setData] = useState<listData[]>([]);
+  const [data, setData] = useState<ProfileUser[]>([]);
+  const [name, setName] = useState<any>();
+  const [gambar, setGambar] = useState<string>('');
 
   const closeModal = () => {
     setIsModalVisible(false);
@@ -36,29 +45,60 @@ const ComponentProfile = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParams>>();
 
-  // {'Read'}
-  useEffect(() => {
+  // ['Api Profile User']
+  const ProfileUser = () => {
     AsyncStorage.getItem('token').then(value => {
-      console.log('Ini token', value);
+      console.log('ini token', value);
+
+      var formdata = new FormData();
+      formdata.append('gambar', gambar);
+      formdata.append('name', name);
 
       var requestOptions = {
         method: 'GET',
+        body: formdata,
+        redirect: 'follow',
         headers: {
           Authorization: `Bearer ${value}`,
         },
       };
+
       fetch(
-        'https://bffb-2001-448a-4044-4106-ab38-f229-1e5f-c8c3.ngrok-free.app/api/beranda-user',
+        'https://5b08-2001-448a-4044-4106-921b-b8e7-cae1-bde1.ngrok-free.app/api/index-profil/5',
         requestOptions,
       )
         .then(response => response.json())
         .then(result => {
-          console.log(result.data);
+          console.log(result);
           setData(result.data);
         })
         .catch(error => console.log('error', error));
     });
-  }, []);
+  };
+
+  // {'Read'}
+  // useEffect(() => {
+  //   AsyncStorage.getItem('token').then(value => {
+  //     console.log('Ini token', value);
+
+  //     var requestOptions = {
+  //       method: 'GET',
+  //       headers: {
+  //         Authorization: `Bearer ${value}`,
+  //       },
+  //     };
+  //     fetch(
+  //       'https://5b08-2001-448a-4044-4106-921b-b8e7-cae1-bde1.ngrok-free.app/api/beranda-user',
+  //       requestOptions,
+  //     )
+  //       .then(response => response.json())
+  //       .then(result => {
+  //         console.log(result.data);
+  //         setData(result.data);
+  //       })
+  //       .catch(error => console.log('error', error));
+  //   });
+  // }, []);
   return (
     <View style={styles.Container}>
       <StatusBar
@@ -66,6 +106,8 @@ const ComponentProfile = () => {
         backgroundColor={Grey}
         translucent={false}
       />
+
+      {/* MODAL */}
       <Modal isVisible={isModalVisible}>
         <View style={styles.ContentModal}>
           <TouchableOpacity style={styles.ViewClose} onPress={closeModal}>
@@ -90,24 +132,36 @@ const ComponentProfile = () => {
           </TouchableOpacity>
         </View>
       </Modal>
+
+      {/* CONTAINER FROFILE */}
       <View style={styles.Header}>
         <TouchableOpacity onPress={() => navigation.navigate('homeAdmin')}>
           <Image source={require('../icon/user.png')} style={styles.Img} />
         </TouchableOpacity>
         <Text style={styles.Txt}>Profile</Text>
-      </View>
-      <View style={styles.Content}>
-        <View style={styles.ContentView}>
-          <Text style={styles.TxtContent}>1</Text>
-          <Text style={styles.TxtContent}>READING LIST</Text>
+        <View>
+          {data.map((idn, index) => (
+            <View key={index}>
+              <TouchableOpacity onPress={ProfileUser}>
+                <Image source={{uri: idn.gambar}} style={styles.Img} />
+              </TouchableOpacity>
+              <Text>{idn.name}</Text>
+            </View>
+          ))}
         </View>
-        <View style={styles.ContentView}>
-          <Text style={styles.TxtContent}>20</Text>
-          <Text style={styles.TxtContent}>WORK</Text>
-        </View>
-        <View style={styles.ContentView}>
-          <Text style={styles.TxtContent}>300</Text>
-          <Text style={styles.TxtContent}>FOLLOWERS</Text>
+        <View style={styles.HeaderTextProfile}>
+          <View style={styles.ContentView}>
+            <Text style={styles.TxtContent}>1</Text>
+            <Text style={styles.TxtContent}>READING LIST</Text>
+          </View>
+          <View style={styles.ContentView}>
+            <Text style={styles.TxtContent}>20</Text>
+            <Text style={styles.TxtContent}>WORK</Text>
+          </View>
+          <View style={styles.ContentView}>
+            <Text style={styles.TxtContent}>300</Text>
+            <Text style={styles.TxtContent}>FOLLOWERS</Text>
+          </View>
         </View>
       </View>
       <View style={styles.Description}>
@@ -126,7 +180,7 @@ const ComponentProfile = () => {
       </View>
       <View style={{flexDirection: 'row', marginLeft: '2%'}}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {data.map((value, index) => (
+          {/* {data.map((value, index) => (
             <View key={index} style={{marginHorizontal: -5}}>
               <TouchableOpacity
                 onPress={() =>
@@ -138,7 +192,7 @@ const ComponentProfile = () => {
                 />
               </TouchableOpacity>
             </View>
-          ))}
+          ))} */}
         </ScrollView>
       </View>
     </View>
@@ -209,6 +263,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginTop: '2%',
+  },
+  HeaderTextProfile: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: wp('80%'),
+    marginTop: '5%',
   },
   ContentView: {
     justifyContent: 'center',

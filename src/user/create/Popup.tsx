@@ -43,7 +43,7 @@ const Popup: React.FC<Props> = ({visible, onPress, onPress2, id}) => {
       };
 
       fetch(
-        `https://c013-2001-448a-4044-4106-7ac4-d406-8376-46f5.ngrok-free.app/api/delete-postingan/${id}`,
+        `https://5b08-2001-448a-4044-4106-921b-b8e7-cae1-bde1.ngrok-free.app/api/delete-postingan/${id}`,
         requestOptions,
       )
         .then(response => response.text())

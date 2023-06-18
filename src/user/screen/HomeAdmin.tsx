@@ -20,6 +20,7 @@ import {RootStackParams} from '../../App';
 const HomeAdmin = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParams>>();
+
   return (
     <View style={styles.Container}>
       <StatusBar

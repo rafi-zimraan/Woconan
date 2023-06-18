@@ -61,10 +61,6 @@ const ModalEdit: React.FC<Props> = ({visible, id}) => {
 
   const Update = () => {
     AsyncStorage.getItem('token').then(value => {
-      var myHeaders = new Headers();
-      myHeaders.append('Content-Type', 'application/json');
-      myHeaders.append('Authorization', `Bearer${value}`);
-
       var formdata = new FormData();
       formdata.append('gambar', gambar);
       formdata.append('judul', judul);
@@ -82,7 +78,7 @@ const ModalEdit: React.FC<Props> = ({visible, id}) => {
       };
 
       fetch(
-        `https://c013-2001-448a-4044-4106-7ac4-d406-8376-46f5.ngrok-free.app/api/update-postingan/${id}`,
+        `https://5b08-2001-448a-4044-4106-921b-b8e7-cae1-bde1.ngrok-free.app/api/update-postingan/${id}`,
         requestOptions,
       )
         .then(response => response.json())
