@@ -35,6 +35,7 @@ const NewStory = () => {
     name: null,
     type: null,
   });
+
   async function getToken(): Promise<string | null> {
     try {
       const token = await AsyncStorage.getItem('token');
@@ -45,6 +46,7 @@ const NewStory = () => {
     }
   }
 
+  // {'IMAGE PICKER'}
   async function chooseImage() {
     try {
       const {assets}: {assets?: any[]} = await launchImageLibrary({
@@ -58,6 +60,7 @@ const NewStory = () => {
     }
   }
 
+  //{'CREAT'}
   async function Creat() {
     var formdata = new FormData();
     formdata.append('gambar', gambar);
@@ -84,6 +87,8 @@ const NewStory = () => {
     } catch (error: any) {
       console.log('ERROR', error.message);
     }
+
+    // {'MENGUNAKAN FETCH'}
     // navigation.navigate('home');
     //   fetch(
     //     'https://f67e-2001-448a-4046-2a14-8444-b570-701f-22ff.ngrok-free.app/api/create-posts',

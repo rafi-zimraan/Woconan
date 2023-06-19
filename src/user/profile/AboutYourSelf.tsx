@@ -22,11 +22,11 @@ import {RootStackParams} from '../../App';
 const AboutYourSelf = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParams>>();
-  const [namaLengkap, setNamaLengkap] = useState<String>('');
-  const [statusHidup, setStatusHidup] = useState<String>('');
+  const [name, setName] = useState<String>('');
+  const [status, setStatus] = useState<String>('');
   const [hobi, setHobi] = useState<String>('');
-  const [wargaNegara, setWargaNegara] = useState<String>('');
-  const [jenisKelamin, setJenisKelamin] = useState<String>('');
+  const [kewarganegaraan, setKewarganegaraan] = useState<String>('');
+  const [jenis_kelamin, setJenis_Kelamin] = useState<String>('');
 
   return (
     <View style={styles.Container}>
@@ -62,7 +62,7 @@ const AboutYourSelf = () => {
                 style={styles.BackgroundTextInput}
                 placeholder="Nama Lengkap"
                 cursorColor={Black}
-                onChangeText={val => setNamaLengkap(val)}
+                onChangeText={val => setName(val)}
               />
             </View>
           </View>
@@ -78,7 +78,7 @@ const AboutYourSelf = () => {
                 style={styles.BackgroundTextInput}
                 placeholder="Status Hidup"
                 cursorColor={Black}
-                onChangeText={val => setStatusHidup(val)}
+                onChangeText={val => setStatus(val)}
               />
             </View>
           </View>
@@ -110,7 +110,7 @@ const AboutYourSelf = () => {
                 style={styles.BackgroundTextInput}
                 placeholder="Warga Negara "
                 cursorColor={Black}
-                onChangeText={val => setWargaNegara(val)}
+                onChangeText={val => setKewarganegaraan(val)}
               />
             </View>
           </View>
@@ -126,7 +126,7 @@ const AboutYourSelf = () => {
                 style={styles.BackgroundTextInput}
                 placeholder="Jenis Kelamin  "
                 cursorColor={Black}
-                onChangeText={val => setJenisKelamin(val)}
+                onChangeText={val => setJenis_Kelamin(val)}
               />
             </View>
           </View>

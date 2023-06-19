@@ -85,7 +85,7 @@ const PasswordNew = () => {
           },
         };
         fetch(
-          'https://baeb-2001-448a-404c-1cd1-a02a-fe39-5413-1026.ngrok-free.app/api/password-baru',
+          'https://d3ad-2001-448a-4040-8920-8f82-2cfc-3dfc-cbd7.ngrok-free.app/api/password-baru',
           requestOptions,
         )
           .then(response => response.json())
