@@ -56,7 +56,7 @@ const DetailProduck = ({route}: Navigation) => {
       };
 
       fetch(
-        `https://927c-2001-448a-4040-8920-8ea6-3d14-6ef-70b9.ngrok-free.app/api/read-user/${route.params?.no_id}`,
+        `https://45a4-2001-448a-4042-41bf-e3dd-7625-3602-b07e.ngrok-free.app/api/read-user/${route.params?.no_id}`,
         requestOptions,
       )
         .then(response => response.json())
@@ -71,20 +71,17 @@ const DetailProduck = ({route}: Navigation) => {
   // {'like'}
   const handleLike = () => {
     AsyncStorage.getItem('token').then(value => {
-      const token = value;
-      if (token && user) {
-        const requestOptions = {
-          method: 'POST',
-          redirect: 'follow',
-          headers: {
-            Authorization: `Bearer ${value}`,
-          },
-        };
-        setRequestOptions(requestOptions); // Set requestOptions value
-      }
+      const requestOptions = {
+        method: 'POST',
+        redirect: 'follow',
+        headers: {
+          Authorization: `Bearer ${value}`,
+        },
+      };
+      setRequestOptions(requestOptions); // Set requestOptions value
 
       fetch(
-        `https://927c-2001-448a-4040-8920-8ea6-3d14-6ef-70b9.ngrok-free.app/api/posts/${route.params?.no_id}/like`,
+        `https://45a4-2001-448a-4042-41bf-e3dd-7625-3602-b07e.ngrok-free.app/api/posts/73/like`,
         requestOptions,
       )
         .then(response => response.json())

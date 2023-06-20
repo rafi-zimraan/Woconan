@@ -48,7 +48,7 @@ const ComponentHome = () => {
         },
       };
       fetch(
-        'https://d3ad-2001-448a-4040-8920-8f82-2cfc-3dfc-cbd7.ngrok-free.app/api/logout',
+        'https://45a4-2001-448a-4042-41bf-e3dd-7625-3602-b07e.ngrok-free.app/api/logout',
         requestOptions,
       )
         .then(response => response.text())
@@ -100,7 +100,7 @@ const ComponentHome = () => {
         },
       };
       fetch(
-        'https://927c-2001-448a-4040-8920-8ea6-3d14-6ef-70b9.ngrok-free.app/api/beranda-user',
+        'https://45a4-2001-448a-4042-41bf-e3dd-7625-3602-b07e.ngrok-free.app/api/beranda-user',
         requestOptions,
       )
         .then(response => response.json())

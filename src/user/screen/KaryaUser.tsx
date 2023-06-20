@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Image,
+  ScrollView,
   StatusBar,
   StyleSheet,
   Text,
@@ -16,10 +17,41 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+interface listData {
+  id: number;
+  gambar: string;
+}
 
 const KaryaUser = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParams>>();
+  const [data, setData] = useState<listData[]>([]);
+  // {'Read'}
+  useEffect(() => {
+    AsyncStorage.getItem('token').then(value => {
+      console.log('Ini token', value);
+
+      var requestOptions = {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${value}`,
+        },
+      };
+      fetch(
+        'https://45a4-2001-448a-4042-41bf-e3dd-7625-3602-b07e.ngrok-free.app/api/beranda-user',
+        requestOptions,
+      )
+        .then(response => response.json())
+        .then(result => {
+          console.log(result.data);
+          setData(result.data);
+        })
+        .catch(error => console.log('error', error));
+    });
+  }, []);
+
   return (
     <View style={styles.Container}>
       <StatusBar barStyle={'light-content'} backgroundColor={Grey} />
@@ -29,21 +61,27 @@ const KaryaUser = () => {
         </TouchableOpacity>
         <Text style={styles.ContentTxt}>Karya User</Text>
       </View>
-      <View style={styles.KaryaUser}>
-        <View style={styles.TxtUser}>
-          <Text style={styles.TxtKaryaUser}>Rafi Zimraan Arjuna W</Text>
+      <ScrollView showsHorizontalScrollIndicator={false}>
+        <View
+          style={{
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+          }}>
+          {data.map((value, index) => (
+            <View key={index} style={{marginBottom: 10}}>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('detail', {no_id: value.id})
+                }>
+                <Image
+                  source={{uri: value.gambar}}
+                  style={{height: 160, width: 140}}
+                />
+              </TouchableOpacity>
+            </View>
+          ))}
         </View>
-        <View style={styles.img}>
-          <Image source={require('../icon/Noval3.png')} style={styles.Novel} />
-          <View style={styles.BookDescription}>
-            <Text style={styles.Book}>Book Club</Text>
-            <Text style={styles.BookDes}>
-              Need a cover? I've got you covered. (Pun!) I can't write if my
-              life depended on it, so I make covers for those who can.
-            </Text>
-          </View>
-        </View>
-      </View>
+      </ScrollView>
     </View>
   );
 };
@@ -101,3 +139,6 @@ const styles = StyleSheet.create({
     marginTop: '3%',
   },
 });
+function useEff4ect(arg0: () => void, arg1: never[]) {
+  throw new Error('Function not implemented.');
+}

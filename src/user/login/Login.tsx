@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {
@@ -30,6 +30,8 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = () => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParams>>();
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [email, setEmail] = useState<String>('');
   const [password, setPassword] = useState<String>('');
@@ -97,7 +99,7 @@ const Login = () => {
       };
 
       fetch(
-        'https://d3ad-2001-448a-4040-8920-8f82-2cfc-3dfc-cbd7.ngrok-free.app/api/login',
+        'https://45a4-2001-448a-4042-41bf-e3dd-7625-3602-b07e.ngrok-free.app/api/login',
         requestOptions,
       )
         .then(response => response.json())
@@ -115,6 +117,7 @@ const Login = () => {
               ToastAndroid.show('Selamat datang user', ToastAndroid.SHORT);
               navigation.replace('bottom');
             } else if (result.message == 'admin login succesful') {
+              console.log('token', result.access_token);
               saveToken(result.access_token);
               ToastAndroid.show('Selamat datang admin', ToastAndroid.SHORT);
               navigation.replace('homeAdmin');
@@ -128,6 +131,25 @@ const Login = () => {
     }
   };
 
+  useEffect(() => {
+    const checkToken = async () => {
+      const value = await AsyncStorage.getItem('token');
+      if (value !== null) {
+        const result = JSON.parse(value);
+        if (result.message === 'user login successful') {
+          ToastAndroid.show('Selamat datang user', ToastAndroid.SHORT);
+          navigation.replace('bottom');
+        } else if (result.message === 'admin login successful') {
+          ToastAndroid.show('Selamat datang admin', ToastAndroid.SHORT);
+          navigation.replace('homeAdmin');
+        }
+      }
+    };
+
+    checkToken();
+  }, [navigation]);
+
+  // {'FORGET PASSWORD'}
   const forget = () => {
     if (forgetPassword === '') {
       Alert.alert('Perhatian !', 'apakah anda lupa kata sandi ?', [
@@ -141,8 +163,7 @@ const Login = () => {
       ]);
     }
   };
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParams>>();
+
   return (
     <View style={styles.Container}>
       <StatusBar

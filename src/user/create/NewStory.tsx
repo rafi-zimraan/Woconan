@@ -71,7 +71,7 @@ const NewStory = () => {
       const token = await getToken();
 
       const {data} = await axios.post(
-        'https://c013-2001-448a-4044-4106-7ac4-d406-8376-46f5.ngrok-free.app/api/create-posts',
+        'https://45a4-2001-448a-4042-41bf-e3dd-7625-3602-b07e.ngrok-free.app/api/create-posts',
         formdata,
         {
           headers: {

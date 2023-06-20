@@ -17,21 +17,48 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParams} from '../../App';
-
-const Warning = () => {
-  Alert.alert('Perhatian !', 'Apakah anda ingin keluar', [
-    {
-      text: 'tidak',
-    },
-    {
-      text: 'ok',
-    },
-  ]);
-};
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProfileAdmin = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParams>>();
+
+  // {'logout with application'}
+  const logout = () => {
+    AsyncStorage.getItem('token').then(value => {
+      var requestOptions = {
+        method: 'POST',
+        redirect: 'follow',
+        headers: {
+          Authorization: `Bearer ${value}`,
+        },
+      };
+      fetch(
+        'https://45a4-2001-448a-4042-41bf-e3dd-7625-3602-b07e.ngrok-free.app/api/logout',
+        requestOptions,
+      )
+        .then(response => response.text())
+        .then(result => {
+          console.log(result);
+          AsyncStorage.removeItem('token');
+          navigation.replace('login');
+        })
+        .catch(error => console.log('error', error));
+    });
+  };
+  // {'WARNING LOGOUT'}
+  const Warning = () => {
+    Alert.alert('Perhatian !', 'Apakah anda ingin keluar', [
+      {
+        text: 'tidak',
+      },
+      {
+        text: 'ok',
+        onPress: () => logout(),
+      },
+    ]);
+  };
+
   return (
     <View style={styles.Container}>
       <StatusBar barStyle={'light-content'} backgroundColor={Grey} />

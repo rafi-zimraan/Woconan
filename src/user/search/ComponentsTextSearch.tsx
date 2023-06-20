@@ -5,15 +5,22 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParams} from '../../App';
 
 const ComponentsTextSearch = () => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParams>>();
   return (
     <View>
       <View style={styles.ContentText}>
         <Text style={styles.TxtTags}>Your Top Tags </Text>
       </View>
       <View style={styles.Content}>
-        <TouchableOpacity style={styles.Horor}>
+        <TouchableOpacity
+          style={styles.Horor}
+          onPress={() => navigation.navigate('homeAdmin')}>
           <Text style={styles.TxtHoror}>Horor</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.Humor}>
