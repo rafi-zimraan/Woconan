@@ -100,7 +100,7 @@ const ComponentHome = () => {
         },
       };
       fetch(
-        'https://45a4-2001-448a-4042-41bf-e3dd-7625-3602-b07e.ngrok-free.app/api/beranda-user',
+        'https://3466-2001-448a-4042-41bf-736a-29a5-6765-b487.ngrok-free.app/api/beranda-user',
         requestOptions,
       )
         .then(response => response.json())

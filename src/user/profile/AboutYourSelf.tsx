@@ -1,11 +1,15 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
+  ActivityIndicator,
+  Alert,
   Image,
   ScrollView,
   StatusBar,
   StyleSheet,
   Text,
   TextInput,
+  ToastAndroid,
+  TouchableNativeFeedback,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -18,6 +22,17 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParams} from '../../App';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Asset, launchImageLibrary} from 'react-native-image-picker';
+
+interface ProfileData {
+  id: number;
+  gambar: string;
+  status: string;
+  hobi: string;
+  kewarganegaraan: string;
+  jenis_kelamin: string;
+}
 
 const AboutYourSelf = () => {
   const navigation =
@@ -27,6 +42,59 @@ const AboutYourSelf = () => {
   const [hobi, setHobi] = useState<String>('');
   const [kewarganegaraan, setKewarganegaraan] = useState<String>('');
   const [jenis_kelamin, setJenis_Kelamin] = useState<String>('');
+  const [loading, setLoading] = useState<boolean>(false);
+  const [data, setData] = useState<ProfileData[]>([]);
+  const [gambar, setGambar] = useState({
+    uri: '',
+    name: null,
+    type: null,
+  });
+
+  // {'IMAGE PICKER'}
+  async function chooseImage() {
+    try {
+      const {assets}: {assets?: any[]} = await launchImageLibrary({
+        mediaType: 'photo',
+        quality: 0.1,
+      });
+      const {fileName: name, type, uri} = assets![0];
+      setGambar({uri, name, type});
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const Profile = () => {
+    AsyncStorage.getItem('token').then(value => {
+      var formdata = new FormData();
+      formdata.append('gambar', gambar);
+      formdata.append('status', status);
+      formdata.append('hobi', hobi);
+      formdata.append('kewarganegaraan', kewarganegaraan);
+      formdata.append('jenis_kelamin', jenis_kelamin);
+
+      var requestOptions = {
+        method: 'POST',
+        body: formdata,
+        redirect: 'follow',
+        headers: {
+          Authorization: `Bearer ${value}`,
+        },
+      };
+
+      fetch(
+        'https://3466-2001-448a-4042-41bf-736a-29a5-6765-b487.ngrok-free.app/api/create-profil',
+        requestOptions,
+      )
+        .then(response => response.json())
+        .then(result => {
+          console.log(result);
+          ToastAndroid.show('Berhasil update profile', ToastAndroid.SHORT);
+          navigation.goBack();
+        })
+        .catch(error => console.log('error', error));
+    });
+  };
 
   return (
     <View style={styles.Container}>
@@ -40,32 +108,48 @@ const AboutYourSelf = () => {
             style={styles.iconLeft}
           />
         </TouchableOpacity>
-        <View style={styles.containerImg}>
-          <Image source={require('../image/FotoRafi.jpg')} style={styles.Img} />
-          <Text style={styles.Drawertxt}>User</Text>
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            {gambar.uri ? (
+              <Image
+                source={{uri: gambar.uri}}
+                style={{
+                  width: wp('25%'),
+                  height: hp('15%'),
+                  borderRadius: 260,
+                }}
+              />
+            ) : null}
+          </View>
+          <TouchableNativeFeedback onPress={chooseImage}>
+            <View style={styles.ViewCamera}>
+              <Image
+                source={require('../icon/camera.png')}
+                style={styles.camera}
+              />
+            </View>
+          </TouchableNativeFeedback>
         </View>
+        {/* <View style={{backgroundColor: 'green'}}>
+          {data.map((value, index) => (
+            <View key={index} style={{backgroundColor: 'red'}}>
+              <Image
+                source={{uri: value.gambar}}
+                style={{height: 50, width: 50, borderRadius: 100}}
+              />
+            </View>
+          ))}
+        </View> */}
         <View style={styles.ContentText}>
           <Text style={styles.Txt}>
             Silahkan lengkapi data diri anda dengan mengisi kolom di bawah!
           </Text>
         </View>
         <View>
-          <View style={styles.TextInput}>
-            <View style={styles.HeaderTextInput}>
-              <Icon
-                name="content-save-all-outline"
-                size={26}
-                color={'#FF9125'}
-                style={styles.Icon}
-              />
-              <TextInput
-                style={styles.BackgroundTextInput}
-                placeholder="Nama Lengkap"
-                cursorColor={Black}
-                onChangeText={val => setName(val)}
-              />
-            </View>
-          </View>
           <View style={styles.TextInput}>
             <View style={styles.HeaderTextInput}>
               <Icon
@@ -131,10 +215,12 @@ const AboutYourSelf = () => {
             </View>
           </View>
         </View>
-        <TouchableOpacity
-          style={styles.SubmitBiodata}
-          onPress={() => navigation.goBack()}>
-          <Text style={styles.TextSubmit}>Submit</Text>
+        <TouchableOpacity style={styles.SubmitBiodata} onPress={Profile}>
+          {loading ? (
+            <ActivityIndicator size="small" color="white" />
+          ) : (
+            <Text style={styles.TextSubmit}>Submit</Text>
+          )}
         </TouchableOpacity>
       </ScrollView>
     </View>
@@ -170,6 +256,14 @@ const styles = StyleSheet.create({
     fontSize: hp('3%'),
     fontWeight: 'bold',
     color: White,
+  },
+  ViewCamera: {
+    alignItems: 'center',
+    backgroundColor: 'red',
+  },
+  camera: {
+    height: hp('3%'),
+    width: wp('7%'),
   },
   ContentText: {
     marginLeft: '4.5%',

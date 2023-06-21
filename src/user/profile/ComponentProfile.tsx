@@ -1,5 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React, {ReactNode, useEffect, useState} from 'react';
 import {
+  ActivityIndicator,
   Button,
   Image,
   ScrollView,
@@ -28,80 +29,86 @@ interface listData {
 }
 
 interface ProfileUserProps {
+  id: number;
   gambar: string;
   name: any;
 }
 
-const ComponentProfile = () => {
+interface ComponentProfileProps {
+  id: number;
+}
+
+const ComponentProfile: React.FC<ComponentProfileProps> = ({id}) => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(true);
-  const [data, setData] = useState<listData[]>([]);
-  const [dataPhoto, setDataPhoto] = useState<ProfileUserProps[]>([]);
+  // const [data, setData] = useState<listData[]>([]);
+  const [data, setData] = useState<ProfileUserProps | null>();
   const [name, setName] = useState<any>();
   const [gambar, setGambar] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(true);
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParams>>();
 
   const closeModal = () => {
     setIsModalVisible(false);
   };
 
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParams>>();
+  useEffect(() => {
+    fetchProfileData();
+  }, []);
 
   // ['Api Profile User']
-  const ProfileUser = () => {
-    AsyncStorage.getItem('token').then(value => {
-      console.log('ini token', value);
-
-      var formdata = new FormData();
-      formdata.append('gambar', gambar);
-      formdata.append('name', name);
-
-      var requestOptions = {
+  const fetchProfileData = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      const requestOptions = {
         method: 'POST',
-        body: formdata,
+        body: new FormData(),
         redirect: 'follow',
         headers: {
-          Authorization: `Bearer ${value}`,
+          Authorization: `Bearer ${token}`,
         },
       };
 
-      fetch(
-        'https://45a4-2001-448a-4042-41bf-e3dd-7625-3602-b07e.ngrok-free.app/api/index-profil/5',
+      const response = await fetch(
+        'https://3466-2001-448a-4042-41bf-736a-29a5-6765-b487.ngrok-free.app/api/index-profil/5',
         requestOptions,
-      )
-        .then(response => response.json())
-        .then(result => {
-          console.log(result);
-          setDataPhoto(result.dataPhoto);
-        })
-        .catch(error => console.log('error', error));
-    });
+      );
+      const result = await response.json();
+
+      if (response.ok) {
+        setData(result.data);
+        setLoading(false);
+      } else {
+        console.log('Error:', result);
+      }
+    } catch (error) {
+      console.log('Error:', error);
+    }
   };
 
-  // {
-  //   ('READ');
-  // }
-  useEffect(() => {
-    AsyncStorage.getItem('token').then(value => {
-      console.log('Ini token', value);
+  // ['READ'];
+  // useEffect(() => {
+  //   AsyncStorage.getItem('token').then(value => {
+  //     console.log('Ini token', value);
 
-      var requestOptions = {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${value}`,
-        },
-      };
-      fetch(
-        'https://45a4-2001-448a-4042-41bf-e3dd-7625-3602-b07e.ngrok-free.app/api/beranda-user',
-        requestOptions,
-      )
-        .then(response => response.json())
-        .then(result => {
-          console.log(result.data);
-          setData(result.data);
-        })
-        .catch(error => console.log('error', error));
-    });
-  }, []);
+  //     var requestOptions = {
+  //       method: 'POST',
+  //       headers: {
+  //         Authorization: `Bearer ${value}`,
+  //       },
+  //     };
+  //     fetch(
+  //       'https://3466-2001-448a-4042-41bf-736a-29a5-6765-b487.ngrok-free.app/api/beranda-user',
+  //       requestOptions,
+  //     )
+  //       .then(response => response.json())
+  //       .then(result => {
+  //         console.log(result.data);
+  //         setData(result.data);
+  //       })
+  //       .catch(error => console.log('error', error));
+  //   });
+  // }, []);
 
   // {'IMAGE PICKER'}
   // const [gambarGalery, setaGambarGlaery] = useState({
@@ -158,36 +165,27 @@ const ComponentProfile = () => {
       </Modal>
 
       {/* CONTAINER FROFILE */}
-      <View style={styles.Header}>
-        <TouchableOpacity onPress={() => ProfileUser()}>
-          <Image source={require('../icon/user.png')} style={styles.Img} />
-        </TouchableOpacity>
-        <Text style={styles.Txt}>Profile</Text>
-        {/* <View style={{backgroundColor: 'red', marginTop: '30%'}}>
-          {dataPhoto.map((idn, index) => (
-            <View key={index}>
-              <TouchableOpacity onPress={ProfileUser}>
-                <Image source={{uri: idn.gambar}} style={styles.Img} />
-              </TouchableOpacity>
-              <Text>{idn.name}</Text>
-            </View>
-          ))}
-        </View> */}
-        <View style={styles.HeaderTextProfile}>
-          <View style={styles.ContentView}>
-            <Text style={styles.TxtContent}>1</Text>
-            <Text style={styles.TxtContent}>READING LIST</Text>
-          </View>
-          <View style={styles.ContentView}>
-            <Text style={styles.TxtContent}>20</Text>
-            <Text style={styles.TxtContent}>WORK</Text>
-          </View>
-          <View style={styles.ContentView}>
-            <Text style={styles.TxtContent}>300</Text>
-            <Text style={styles.TxtContent}>FOLLOWERS</Text>
-          </View>
+      {data && (
+        <View style={styles.profileContainer}>
+          <Image source={{uri: data.gambar}} style={styles.profileImage} />
+          <Text>{data.name}</Text>
         </View>
-      </View>
+      )}
+      {/* <View style={{alignItems: 'center'}}>
+        <Image
+          source={{
+            uri: 'https://res.cloudinary.com/dzfmf0byk/image/upload/v1687328081/profile/2023-06-21_061439_9778076.png',
+          }}
+          style={{
+            height: 100,
+            width: 100,
+            borderWidth: 1.5,
+            borderRadius: 100,
+            borderColor: Black,
+          }}
+        />
+        <Text>{}</Text>
+      </View> */}
       <View style={styles.Description}>
         <Text style={styles.TxtDes}>Description about yourself</Text>
         <TouchableOpacity
@@ -202,7 +200,7 @@ const ComponentProfile = () => {
         </Text>
         <Text style={styles.TxtContent2}>2 published story</Text>
       </View>
-      <View style={{flexDirection: 'row', marginLeft: '2%'}}>
+      {/* <View style={{flexDirection: 'row', marginLeft: '2%'}}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {data.map((value, index) => (
             <View key={index} style={{marginHorizontal: -5}}>
@@ -218,7 +216,7 @@ const ComponentProfile = () => {
             </View>
           ))}
         </ScrollView>
-      </View>
+      </View> */}
     </View>
   );
 };
@@ -277,7 +275,8 @@ const styles = StyleSheet.create({
   Header: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: '1%',
+    marginTop: '3%',
+    backgroundColor: White,
   },
   Img: {
     width: wp('25.6%'),
@@ -306,9 +305,18 @@ const styles = StyleSheet.create({
     color: Abu2,
     fontFamily: 'Poppins-Medium',
   },
+  profileContainer: {
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  profileImage: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+  },
   Description: {
     backgroundColor: Abu,
-    marginTop: '4%',
+    marginTop: '7%',
     height: hp('10%'),
     marginHorizontal: 20,
     justifyContent: 'flex-start',

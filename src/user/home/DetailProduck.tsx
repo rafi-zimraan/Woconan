@@ -38,7 +38,6 @@ interface User {
 }
 
 const DetailProduck = ({route}: Navigation) => {
-  const [user, setUser] = useState<User | null>(null);
   const [data, setData] = useState<listData[]>([]);
   const [liked, setLiked] = useState<boolean>(false);
   const [likeCount, setLikeCount] = useState<number>(0);
@@ -56,7 +55,7 @@ const DetailProduck = ({route}: Navigation) => {
       };
 
       fetch(
-        `https://45a4-2001-448a-4042-41bf-e3dd-7625-3602-b07e.ngrok-free.app/api/read-user/${route.params?.no_id}`,
+        `https://3466-2001-448a-4042-41bf-736a-29a5-6765-b487.ngrok-free.app/api/read-user/${route.params?.no_id}`,
         requestOptions,
       )
         .then(response => response.json())
@@ -81,7 +80,7 @@ const DetailProduck = ({route}: Navigation) => {
       setRequestOptions(requestOptions); // Set requestOptions value
 
       fetch(
-        `https://45a4-2001-448a-4042-41bf-e3dd-7625-3602-b07e.ngrok-free.app/api/posts/73/like`,
+        `https://3466-2001-448a-4042-41bf-736a-29a5-6765-b487.ngrok-free.app/api/posts/73/like`,
         requestOptions,
       )
         .then(response => response.json())
@@ -94,30 +93,6 @@ const DetailProduck = ({route}: Navigation) => {
         .catch(error => console.log('error', error));
     });
   };
-
-  // const Like = () => {
-  //   AsyncStorage.getItem('token').then(value => {
-  //     const headers = {
-  //       Authorization: `Bearer ${value}`,
-  //     };
-
-  //     axios
-  //       .get(
-  //         'https://1bf6-2001-448a-4040-6643-fc9c-1382-7317-1f92.ngrok-free.app/api/posts/15/like',
-  //         null,
-  //         {headers},
-  //       )
-  //       .then(response => {
-  //         const {liked, likeCount, message} = response.data;
-  //         setLiked(liked);
-  //         setLikeCount(likeCount);
-
-  //         // Tampilkan pesan sukses
-  //         console.log(message);
-  //       })
-  //       .catch(error => console.log('error', error));
-  //   });
-  // };
 
   return (
     <View style={{flex: 1, backgroundColor: Grey}}>
