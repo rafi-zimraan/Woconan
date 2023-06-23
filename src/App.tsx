@@ -37,7 +37,7 @@ export type RootStackParams = {
   biodataUser: undefined;
   profileAdmin: undefined;
   profileUser: undefined;
-  aboutYouSelf: undefined;
+  aboutYouSelf: {token: any} | undefined;
   forgetPassword: undefined;
   passwordNew: undefined;
   detail: {no_id: number} | undefined;

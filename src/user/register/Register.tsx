@@ -128,7 +128,7 @@ const Register = () => {
         redirect: 'follow',
       };
       fetch(
-        'https://aca1-2001-448a-4045-45d9-28e7-9606-2565-1970.ngrok-free.app/api/register',
+        'https://0fe4-2001-448a-404a-611e-10f2-e820-9d30-a30.ngrok-free.app/api/register',
         requestOptions,
       )
         .then(response => response.json())

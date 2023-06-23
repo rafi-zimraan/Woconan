@@ -19,7 +19,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParams} from '../../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -34,67 +34,116 @@ interface ProfileData {
   jenis_kelamin: string;
 }
 
+interface RouteParams {
+  token?: string;
+}
+
 const AboutYourSelf = () => {
+  const route = useRoute();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParams>>();
-  const [name, setName] = useState<String>('');
-  const [status, setStatus] = useState<String>('');
-  const [hobi, setHobi] = useState<String>('');
-  const [kewarganegaraan, setKewarganegaraan] = useState<String>('');
-  const [jenis_kelamin, setJenis_Kelamin] = useState<String>('');
+  const [name, setName] = useState<string>('');
+  const [status, setStatus] = useState<string>('');
+  const [hobi, setHobi] = useState<string>('');
+  const [kewarganegaraan, setKewarganegaraan] = useState<string>('');
+  const [jenis_kelamin, setJenis_Kelamin] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [data, setData] = useState<ProfileData[]>([]);
-  const [gambar, setGambar] = useState({
+
+  const [gambar, setGambar] = useState<{
+    uri: string | undefined;
+    name: string | null;
+    type: string | null;
+  }>({
     uri: '',
     name: null,
     type: null,
   });
 
+  let token = (route.params as RouteParams)?.token;
+
+  // {'Get data profile'}
+  const get_data_profile = () => {
+    const requestOptions = {
+      method: 'POST',
+      redirect: 'follow',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    fetch(
+      'https://1c2c-2001-448a-404a-611e-d28c-b918-a2ae-498a.ngrok-free.app/api/index-profil/5',
+      requestOptions,
+    )
+      .then(response => response.json())
+      .then(response => {
+        setData(response.data);
+        setName(response.data.name);
+        setStatus(response.data.status);
+        setHobi(response.data.hobi);
+        setKewarganegaraan(response.data.kewarganegaraan);
+        setJenis_Kelamin(response.data.jenis_kelamin);
+      })
+      .catch(e => console.log(e));
+  };
+
+  useEffect(() => {
+    get_data_profile();
+  }, []);
+
+  // {'Update data'}
+  const update_data = () => {
+    var myHeaders = new Headers();
+    myHeaders.append('Authorization', `Bearer ${token}`);
+
+    var formdata = new FormData();
+    formdata.append('gambar', gambar);
+    formdata.append('name', name);
+    formdata.append('status', status);
+    formdata.append('hobi', hobi);
+    formdata.append('kewarganegaraan', kewarganegaraan);
+    formdata.append('jenis_kelamin', jenis_kelamin);
+
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: formdata,
+      redirect: 'follow',
+    };
+
+    fetch(
+      'https://1c2c-2001-448a-404a-611e-d28c-b918-a2ae-498a.ngrok-free.app/api/update-profil/5',
+      requestOptions,
+    )
+      .then(response => response.json())
+      .then(result => {
+        console.log(result),
+          ToastAndroid.show('Anda berhasil update data', ToastAndroid.SHORT);
+        navigation.goBack();
+      })
+      .catch(error => console.log('error', error));
+  };
   // {'IMAGE PICKER'}
   async function chooseImage() {
     try {
-      const {assets}: {assets?: any[]} = await launchImageLibrary({
+      const result = await launchImageLibrary({
         mediaType: 'photo',
         quality: 0.1,
       });
-      const {fileName: name, type, uri} = assets![0];
-      setGambar({uri, name, type});
+      if (result?.assets && result.assets.length > 0) {
+        const {fileName: name, type, uri} = result.assets[0];
+        setGambar({
+          ...gambar,
+          uri: uri || '',
+          name: name || '',
+          type: type || '',
+        });
+      }
     } catch (error) {
       console.log(error);
     }
   }
-
-  const Profile = () => {
-    AsyncStorage.getItem('token').then(value => {
-      var formdata = new FormData();
-      formdata.append('gambar', gambar);
-      formdata.append('status', status);
-      formdata.append('hobi', hobi);
-      formdata.append('kewarganegaraan', kewarganegaraan);
-      formdata.append('jenis_kelamin', jenis_kelamin);
-
-      var requestOptions = {
-        method: 'POST',
-        body: formdata,
-        redirect: 'follow',
-        headers: {
-          Authorization: `Bearer ${value}`,
-        },
-      };
-
-      fetch(
-        'https://3466-2001-448a-4042-41bf-736a-29a5-6765-b487.ngrok-free.app/api/create-profil',
-        requestOptions,
-      )
-        .then(response => response.json())
-        .then(result => {
-          console.log(result);
-          ToastAndroid.show('Berhasil update profile', ToastAndroid.SHORT);
-          navigation.goBack();
-        })
-        .catch(error => console.log('error', error));
-    });
-  };
 
   return (
     <View style={styles.Container}>
@@ -125,7 +174,7 @@ const AboutYourSelf = () => {
               />
             ) : null}
           </View>
-          <TouchableNativeFeedback onPress={chooseImage}>
+          <TouchableNativeFeedback onPress={() => chooseImage()}>
             <View style={styles.ViewCamera}>
               <Image
                 source={require('../icon/camera.png')}
@@ -134,22 +183,31 @@ const AboutYourSelf = () => {
             </View>
           </TouchableNativeFeedback>
         </View>
-        {/* <View style={{backgroundColor: 'green'}}>
-          {data.map((value, index) => (
-            <View key={index} style={{backgroundColor: 'red'}}>
-              <Image
-                source={{uri: value.gambar}}
-                style={{height: 50, width: 50, borderRadius: 100}}
-              />
-            </View>
-          ))}
-        </View> */}
         <View style={styles.ContentText}>
           <Text style={styles.Txt}>
             Silahkan lengkapi data diri anda dengan mengisi kolom di bawah!
           </Text>
         </View>
         <View>
+          {/* nama */}
+          <View style={styles.TextInput}>
+            <View style={styles.HeaderTextInput}>
+              <Icon
+                name="card-account-details-outline"
+                size={26}
+                color={'#FF9125'}
+                style={styles.Icon}
+              />
+              <TextInput
+                style={styles.BackgroundTextInput}
+                placeholder="Nama"
+                cursorColor={Black}
+                onChangeText={val => setName(val)}
+                value={name}
+              />
+            </View>
+          </View>
+          {/* status */}
           <View style={styles.TextInput}>
             <View style={styles.HeaderTextInput}>
               <Icon
@@ -163,6 +221,7 @@ const AboutYourSelf = () => {
                 placeholder="Status Hidup"
                 cursorColor={Black}
                 onChangeText={val => setStatus(val)}
+                value={status}
               />
             </View>
           </View>
@@ -179,6 +238,7 @@ const AboutYourSelf = () => {
                 placeholder="Hobi"
                 cursorColor={Black}
                 onChangeText={val => setHobi(val)}
+                value={hobi}
               />
             </View>
           </View>
@@ -195,6 +255,7 @@ const AboutYourSelf = () => {
                 placeholder="Warga Negara "
                 cursorColor={Black}
                 onChangeText={val => setKewarganegaraan(val)}
+                value={kewarganegaraan}
               />
             </View>
           </View>
@@ -211,11 +272,15 @@ const AboutYourSelf = () => {
                 placeholder="Jenis Kelamin  "
                 cursorColor={Black}
                 onChangeText={val => setJenis_Kelamin(val)}
+                value={jenis_kelamin}
               />
             </View>
           </View>
         </View>
-        <TouchableOpacity style={styles.SubmitBiodata} onPress={Profile}>
+
+        <TouchableOpacity
+          style={styles.SubmitBiodata}
+          onPress={() => update_data()}>
           {loading ? (
             <ActivityIndicator size="small" color="white" />
           ) : (

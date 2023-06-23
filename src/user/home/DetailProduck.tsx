@@ -55,7 +55,7 @@ const DetailProduck = ({route}: Navigation) => {
       };
 
       fetch(
-        `https://3466-2001-448a-4042-41bf-736a-29a5-6765-b487.ngrok-free.app/api/read-user/${route.params?.no_id}`,
+        `https://1c2c-2001-448a-404a-611e-d28c-b918-a2ae-498a.ngrok-free.app/api/read-user/${route.params?.no_id}`,
         requestOptions,
       )
         .then(response => response.json())

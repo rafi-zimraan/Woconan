@@ -35,8 +35,8 @@ const Splash = () => {
   };
   useEffect(() => {
     setTimeout(() => {
-      // navigation.navigate('homeAdmin');
-      getToken();
+      navigation.navigate('bottom');
+      // getToken();
     }, 3000);
   }, [navigation]);
 
