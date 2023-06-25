@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
-  Alert,
   Image,
   ScrollView,
   StatusBar,
@@ -22,8 +21,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParams} from '../../App';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Asset, launchImageLibrary} from 'react-native-image-picker';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 interface ProfileData {
   id: number;
@@ -73,7 +71,7 @@ const AboutYourSelf = () => {
     };
 
     fetch(
-      'https://1c2c-2001-448a-404a-611e-d28c-b918-a2ae-498a.ngrok-free.app/api/index-profil/5',
+      'https://kelompokx.muhammadiyahexpo.com/api/index-profil/5',
       requestOptions,
     )
       .then(response => response.json())
@@ -113,7 +111,7 @@ const AboutYourSelf = () => {
     };
 
     fetch(
-      'https://1c2c-2001-448a-404a-611e-d28c-b918-a2ae-498a.ngrok-free.app/api/update-profil/5',
+      'https://kelompokx.muhammadiyahexpo.com/api/update-profil/5',
       requestOptions,
     )
       .then(response => response.json())
@@ -124,10 +122,10 @@ const AboutYourSelf = () => {
       })
       .catch(error => console.log('error', error));
   };
-  // {'IMAGE PICKER'}
+  // {'IMAGE PICKER Foto '}
   async function chooseImage() {
     try {
-      const result = await launchImageLibrary({
+      const result = await launchCamera({
         mediaType: 'photo',
         quality: 0.1,
       });
@@ -144,6 +142,28 @@ const AboutYourSelf = () => {
       console.log(error);
     }
   }
+
+  // {'IMAGE PICKER GALERY '}
+  // async function openGallery() {
+  //   try {
+  //     const result = await launchImageLibrary({
+  //       mediaTypes: 'Images',
+  //       quality: 0.1,
+  //     });
+
+  //     if (!result.cancelled) {
+  //       const {fileName: name, type, uri} = result;
+  //       setGambar({
+  //         ...gambar,
+  //         uri: uri || '',
+  //         name: name || '',
+  //         type: type || '',
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
 
   return (
     <View style={styles.Container}>

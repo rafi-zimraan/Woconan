@@ -71,7 +71,7 @@ const OtpPasswordNew = () => {
           },
         };
         fetch(
-          'https://d3ad-2001-448a-4040-8920-8f82-2cfc-3dfc-cbd7.ngrok-free.app/api/verifikasi-reset',
+          'https://kelompokx.muhammadiyahexpo.com/api/verifikasi-reset',
           requestOptions,
         )
           .then(response => response.json())

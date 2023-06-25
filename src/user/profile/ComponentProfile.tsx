@@ -1,7 +1,5 @@
-import React, {ReactNode, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
-  ActivityIndicator,
-  Button,
   Image,
   ScrollView,
   StatusBar,
@@ -34,11 +32,7 @@ interface ProfileUserProps {
   name: any;
 }
 
-interface ComponentProfileProps {
-  id: number;
-}
-
-const ComponentProfile: React.FC<ComponentProfileProps> = ({id}) => {
+const ComponentProfile = () => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(true);
   const [dataProfile, setDataProfile] = useState<listData[]>([]);
   const [data, setData] = useState<ProfileUserProps | null>();
@@ -46,13 +40,16 @@ const ComponentProfile: React.FC<ComponentProfileProps> = ({id}) => {
   const [gambar, setGambar] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
   const [token, setToken] = useState('');
+  const [isFollowing, setIsFollowing] = useState(false);
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParams>>();
 
+  // {'Modal'}
   const closeModal = () => {
     setIsModalVisible(false);
   };
 
+  // {'Profile User'}
   const fetch_data = (token: any) => {
     const requestOptions = {
       method: 'POST',
@@ -63,18 +60,19 @@ const ComponentProfile: React.FC<ComponentProfileProps> = ({id}) => {
     };
 
     fetch(
-      'https://1c2c-2001-448a-404a-611e-d28c-b918-a2ae-498a.ngrok-free.app/api/index-profil/5',
+      'https://kelompokx.muhammadiyahexpo.com/api/index-profil/5',
       requestOptions,
     )
       .then(response => response.json())
       .then(response => {
-        setData(response.data);
         console.log(response.data);
+        setData(response.data);
         tampilkan_content(token);
       })
       .catch(e => console.log(e));
   };
-  // tampilkan content
+
+  // {'tampilkan content'}
   const tampilkan_content = (token: any) => {
     var requestOptions = {
       method: 'POST',
@@ -83,7 +81,7 @@ const ComponentProfile: React.FC<ComponentProfileProps> = ({id}) => {
       },
     };
     fetch(
-      'https://1c2c-2001-448a-404a-611e-d28c-b918-a2ae-498a.ngrok-free.app/api/beranda-user',
+      'https://kelompokx.muhammadiyahexpo.com/api/beranda-user',
       requestOptions,
     )
       .then(response => response.json())
@@ -109,6 +107,11 @@ const ComponentProfile: React.FC<ComponentProfileProps> = ({id}) => {
     } catch (error) {
       console.log('Error:', error);
     }
+  };
+
+  // {'Text Following"}
+  const HandleFollowing = () => {
+    setIsFollowing(prevState => !prevState);
   };
   return (
     <View style={styles.Container}>
@@ -147,54 +150,64 @@ const ComponentProfile: React.FC<ComponentProfileProps> = ({id}) => {
       {/* CONTAINER FROFILE */}
       {data && (
         <View style={styles.profileContainer}>
-          <Image source={{uri: data.gambar}} style={styles.profileImage} />
-          <Text
-            style={{
-              color: White,
-              fontFamily: 'Poppins-Bold',
-              backgroundColor: 'red',
-              marginLeft: 20,
-              marginTop: '3%',
-            }}>
-            {data.name}
-          </Text>
+          <TouchableOpacity>
+            <Image source={{uri: data.gambar}} style={styles.profileImage} />
+          </TouchableOpacity>
+          <Text style={styles.MapDataProfile}>{data.name}</Text>
         </View>
       )}
       <View style={styles.Description}>
         <Text style={styles.TxtDes}>Description about yourself</Text>
-        <TouchableOpacity
-          style={styles.AboutSelf}
-          onPress={() =>
-            navigation.navigate('aboutYouSelf', {
-              token,
-            })
-          }>
-          <Text style={styles.TextAboutYouSelf}>About your self</Text>
-        </TouchableOpacity>
+
+        {/* ABOUT YOUR SELF */}
+        <View style={{flexDirection: 'row'}}>
+          <TouchableOpacity
+            style={styles.AboutSelf}
+            onPress={() =>
+              navigation.navigate('aboutYouSelf', {
+                token,
+              })
+            }>
+            <Text style={styles.TextAboutYouSelf}>About your self</Text>
+          </TouchableOpacity>
+
+          {/* FOLLOWERS */}
+          <TouchableOpacity
+            style={[
+              styles.ViewFollow,
+              {backgroundColor: isFollowing ? 'orange' : 'blue'},
+            ]}
+            onPress={HandleFollowing}>
+            <Text
+              style={[
+                styles.TxtViewFollow,
+                {color: isFollowing ? 'white' : 'white'},
+              ]}>
+              {isFollowing ? 'Following' : 'Follow'}
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      <View style={styles.ContentText}>
-        <Text style={styles.TxtContent}>
-          Stories by @rafiZimraanarjuna.wijaya
-        </Text>
-        <Text style={styles.TxtContent2}>2 published story</Text>
-      </View>
-      <View style={{flexDirection: 'row', marginLeft: '2%'}}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+
+      {/* Content */}
+      <ScrollView showsHorizontalScrollIndicator={false}>
+        <View
+          style={{flexDirection: 'row', marginLeft: '2%', flexWrap: 'wrap'}}>
           {dataProfile.map((value, index) => (
-            <View key={index} style={{marginHorizontal: -5}}>
+            <View key={index} style={{margin: 16}}>
               <TouchableOpacity
                 onPress={() =>
                   navigation.navigate('detail', {no_id: value.id})
                 }>
                 <Image
                   source={{uri: value.gambar}}
-                  style={{height: 160, width: 140}}
+                  style={{height: 130, width: 100}}
                 />
               </TouchableOpacity>
             </View>
           ))}
-        </ScrollView>
-      </View>
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -288,6 +301,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 20,
   },
+  MapDataProfile: {
+    color: White,
+    fontFamily: 'Poppins-Bold',
+    marginLeft: 24,
+    marginTop: '1%',
+    fontSize: hp('2.7%'),
+  },
   profileImage: {
     width: 150,
     height: 150,
@@ -311,7 +331,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
-    elevation: 4,
+    elevation: 14,
     marginHorizontal: 10,
     width: wp('30%'),
     height: hp('4.5%'),
@@ -320,6 +340,19 @@ const styles = StyleSheet.create({
     color: White,
     fontSize: hp('2%'),
     fontWeight: '700',
+  },
+  ViewFollow: {
+    backgroundColor: Blue,
+    width: wp('30%%'),
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    elevation: 14,
+  },
+  TxtViewFollow: {
+    color: White,
+    fontFamily: 'Poppins-Bold',
+    fontSize: hp('1.8%'),
   },
   ContentText: {
     marginTop: '3%',

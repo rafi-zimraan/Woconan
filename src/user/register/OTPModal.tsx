@@ -57,7 +57,7 @@ const OTPModal: React.FC<Props> = ({visible}) => {
     };
 
     fetch(
-      'https://0fe4-2001-448a-404a-611e-10f2-e820-9d30-a30.ngrok-free.app/api/kirim-verifikasi',
+      'https://kelompokx.muhammadiyahexpo.com/api/kirim-verifikasi',
       requestOptions,
     )
       .then(response => response.json())

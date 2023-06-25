@@ -47,10 +47,7 @@ const ComponentHome = () => {
           Authorization: `Bearer ${value}`,
         },
       };
-      fetch(
-        'https://1c2c-2001-448a-404a-611e-d28c-b918-a2ae-498a.ngrok-free.app/api/logout',
-        requestOptions,
-      )
+      fetch('https://kelompokx.muhammadiyahexpo.com/api/logout', requestOptions)
         .then(response => response.text())
         .then(result => {
           console.log(result);
@@ -100,7 +97,7 @@ const ComponentHome = () => {
         },
       };
       fetch(
-        'https://1c2c-2001-448a-404a-611e-d28c-b918-a2ae-498a.ngrok-free.app/api/beranda-user',
+        'https://kelompokx.muhammadiyahexpo.com/api/beranda-user',
         requestOptions,
       )
         .then(response => response.json())
@@ -230,7 +227,7 @@ const ComponentHome = () => {
         </View>
         <View style={{marginLeft: '2%'}}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {image.map((val, index, item) => {
+            {image.map((val, index) => {
               return (
                 <View>
                   <ImageFlatlist
@@ -253,14 +250,14 @@ const ComponentHome = () => {
               flexWrap: 'wrap',
             }}>
             {data.map((value, index) => (
-              <View key={index} style={{marginBottom: 10}}>
+              <View key={index} style={{margin: 16}}>
                 <TouchableOpacity
                   onPress={() =>
                     navigation.navigate('detail', {no_id: value.id})
                   }>
                   <Image
                     source={{uri: value.gambar}}
-                    style={{height: 160, width: 140}}
+                    style={{height: 130, width: 100}}
                   />
                 </TouchableOpacity>
               </View>

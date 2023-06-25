@@ -36,6 +36,15 @@ const NewStory = () => {
     type: null,
   });
 
+  useEffect(() => {
+    const refresh = navigation.addListener('focus', () => {
+      getToken();
+    });
+
+    return refresh;
+  }, [navigation]);
+
+  // {'Save Token'}
   async function getToken(): Promise<string | null> {
     try {
       const token = await AsyncStorage.getItem('token');
@@ -71,7 +80,7 @@ const NewStory = () => {
       const token = await getToken();
 
       const {data} = await axios.post(
-        'https://45a4-2001-448a-4042-41bf-e3dd-7625-3602-b07e.ngrok-free.app/api/create-posts',
+        'https://kelompokx.muhammadiyahexpo.com/api/create-posts',
         formdata,
         {
           headers: {
@@ -110,6 +119,10 @@ const NewStory = () => {
     // }
   }
 
+  const handleDescriptionChange = (LaneDescription: string) => {
+    setDescripsi(LaneDescription);
+  };
+
   return (
     <View style={{flex: 1, backgroundColor: Grey}}>
       <StatusBar
@@ -147,19 +160,16 @@ const NewStory = () => {
             style={{height: hp('5%'), width: wp('40%')}}
             placeholder="Judul"
             onChangeText={val => setJudul(val)}
+            value={judul}
           />
         </View>
-        <View style={styles.HeaderView}>
-          <Icon
-            name="image-text"
-            size={26}
-            color="#888"
-            style={styles.IconPlasholder}
-          />
+        <View style={styles.HeaderViewDescription}>
           <TextInput
-            style={{height: hp('5%'), width: wp('40%')}}
+            selectionColor={White}
             placeholder="Descripsi"
             onChangeText={val => setDescripsi(val)}
+            multiline={true}
+            value={descripsi}
           />
         </View>
       </View>
@@ -190,6 +200,14 @@ const styles = StyleSheet.create({
     backgroundColor: White,
     borderRadius: 20,
     marginTop: '2%',
+  },
+  HeaderViewDescription: {
+    flexDirection: 'row',
+    backgroundColor: 'green',
+    borderRadius: 20,
+    marginTop: '3%',
+    height: hp('20%'),
+    width: wp('85%'),
   },
   TextInput: {
     alignItems: 'center',

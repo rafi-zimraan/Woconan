@@ -1,5 +1,5 @@
 import React, {useEffect, useRef} from 'react';
-import {useNavigation} from '@react-navigation/native';
+import {NavigationState, useNavigation} from '@react-navigation/native';
 import {
   Image,
   StyleSheet,
@@ -16,29 +16,62 @@ import {RootStackParams} from '../../App';
 import {Grey, White} from '../utils/Colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Splash = () => {
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParams>>();
+type SplashNavigationProp = NativeStackNavigationProp<
+  RootStackParams,
+  'homeAdmin' | 'bottom' | 'login'
+>;
 
-  const getToken = async () => {
-    try {
-      let value = await AsyncStorage.getItem('token');
+interface Props {
+  navigation: SplashNavigationProp;
+}
 
-      if (value !== null && value !== '') {
-        navigation.navigate('bottom');
+const GetToken = async (navigation: SplashNavigationProp) => {
+  try {
+    const value = await AsyncStorage.getItem('token');
+    const userRole = await AsyncStorage.getItem('userRole');
+
+    if (value !== null && value !== '') {
+      if (userRole === 'admin') {
+        navigation.navigate('homeAdmin');
       } else {
-        navigation.navigate('login');
+        navigation.navigate('bottom');
       }
-    } catch (e) {
-      console.log('getToken', e);
+    } else {
+      navigation.navigate('login');
     }
-  };
+  } catch (error) {
+    console.log('Error', error);
+  }
+};
+
+const Splash: React.FC<Props> = ({navigation}) => {
   useEffect(() => {
-    setTimeout(() => {
-      navigation.navigate('bottom');
-      // getToken();
+    const timer = setTimeout(() => {
+      GetToken(navigation);
     }, 3000);
+
+    return () => clearTimeout(timer);
   }, [navigation]);
+
+  // const getToken = async () => {
+  //   try {
+  //     let value = await AsyncStorage.getItem('token');
+
+  //     if (value !== null && value !== '') {
+  //       navigation.navigate('bottom');
+  //     } else {
+  //       navigation.navigate('login');
+  //     }
+  //   } catch (e) {
+  //     console.log('getToken', e);
+  //   }
+  // };
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     // navigation.navigate('bottom');
+  //     getToken();
+  //   }, 3000);
+  // }, [navigation]);
 
   return (
     <View style={styles.Container}>

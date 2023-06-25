@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {Abu, AbuABu, Black, Grey, GreyLight, White} from '../utils/Colors';
+import {Abu, AbuABu, Black, Grey, GreyLight, White} from '../user/utils/Colors';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -16,8 +16,10 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {RootStackParams} from '../../App';
+import {RootStackParams} from '../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ICONS from './icon/Index';
+import IMAGES from './image/Index';
 
 const ProfileAdmin = () => {
   const navigation =
@@ -33,10 +35,7 @@ const ProfileAdmin = () => {
           Authorization: `Bearer ${value}`,
         },
       };
-      fetch(
-        'https://45a4-2001-448a-4042-41bf-e3dd-7625-3602-b07e.ngrok-free.app/api/logout',
-        requestOptions,
-      )
+      fetch('https://kelompokx.muhammadiyahexpo.com/api/logout', requestOptions)
         .then(response => response.text())
         .then(result => {
           console.log(result);
@@ -68,23 +67,14 @@ const ProfileAdmin = () => {
         </TouchableOpacity>
         <Text style={styles.ContentTxt}>Profile</Text>
         <TouchableOpacity onPress={() => Warning()}>
-          <Image
-            source={require('../icon/check-out.png')}
-            style={styles.ImgLogout}
-          />
+          <Image source={ICONS.checkOut} style={styles.ImgLogout} />
         </TouchableOpacity>
       </View>
       <View style={styles.ContentProfile}>
         <View style={styles.ViewProfile}>
-          <Image
-            source={require('../image/profilePicture.png')}
-            style={styles.imgPeople}
-          />
+          <Image source={IMAGES.profilePicture} style={styles.imgPeople} />
           <TouchableOpacity>
-            <Image
-              source={require('../icon/vertIcon.png')}
-              style={styles.imgTitik3}
-            />
+            <Image source={ICONS.verticon} style={styles.imgTitik3} />
           </TouchableOpacity>
         </View>
         <View style={styles.TxtAdmin}>

@@ -8,10 +8,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {Grey, White} from '../utils/Colors';
+import {Grey, White} from '../user/utils/Colors';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
-import {RootStackParams} from '../../App';
+import {RootStackParams} from '../App';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {
   widthPercentageToDP as wp,

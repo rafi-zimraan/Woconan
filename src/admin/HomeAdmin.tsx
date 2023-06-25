@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Image,
   StatusBar,
@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {Black, Grey, White, krem} from '../utils/Colors';
+import {Black, Grey, White, krem} from '../user/utils/Colors';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -15,11 +15,28 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {RootStackParams} from '../../App';
+import {RootStackParams} from '../App';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import ICONS from './icon/Index';
 
 const HomeAdmin = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParams>>();
+
+  // {'Ambil token for AsyncStorage saat componen di-mont}
+  useEffect(() => {
+    AsyncStorage.getItem('userRoll')
+      .then(value => {
+        if (value === 'user') {
+          navigation.replace('bottom');
+        } else {
+          console.log('Token saved succesfully.');
+        }
+      })
+      .catch(error => {
+        console.log('Error retrieving token:', error);
+      });
+  }, []);
 
   return (
     <View style={styles.Container}>
@@ -37,35 +54,23 @@ const HomeAdmin = () => {
         </View>
       </View>
       <View style={styles.Header}>
-        <Image
-          source={require('../icon/ProfileAdmin.png')}
-          style={styles.imgProfile}
-        />
+        <Image source={ICONS.img} style={styles.imgProfile} />
       </View>
       <View style={styles.ContentDataUser}>
         <TouchableOpacity
           style={styles.ContentImg}
           onPress={() => navigation.navigate('karyaUser')}>
-          <Image
-            source={require('../icon/reading.png')}
-            style={styles.imgDataUser}
-          />
+          <Image source={ICONS.reding} style={styles.imgDataUser} />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.ContentImg}
           onPress={() => navigation.navigate('biodataUser')}>
-          <Image
-            source={require('../icon/stats.png')}
-            style={styles.imgDataUser}
-          />
+          <Image source={ICONS.stats} style={styles.imgDataUser} />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.ContentImg}
           onPress={() => navigation.navigate('profileAdmin')}>
-          <Image
-            source={require('../icon/personal.png')}
-            style={styles.imgDataUser}
-          />
+          <Image source={ICONS.personal} style={styles.imgDataUser} />
         </TouchableOpacity>
       </View>
       <View style={styles.TextBox}>

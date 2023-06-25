@@ -1,7 +1,6 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
 import Home from './user/screen/Home';
 import Login from './user/login/Login';
 import BottomTabLogin from './user/screen/BottomTabLogin';
@@ -11,10 +10,10 @@ import NewStory from './user/create/NewStory';
 import Splash from './user/splash/Splash';
 import Produck from './user/produck/Produck';
 import CommentProduck from './user/produck/CommentProduck';
-import HomeAdmin from './user/screen/HomeAdmin';
-import KaryaUser from './user/screen/KaryaUser';
-import BiodataUser from './user/screen/BiodataUser';
-import ProfileAdmin from './user/screen/ProfileAdmin';
+import HomeAdmin from './admin/HomeAdmin';
+import KaryaUser from './admin/KaryaUser';
+import BiodataUser from './admin/BiodataUser';
+import ProfileAdmin from './admin/ProfileAdmin';
 import ComponentProfile from './user/profile/ComponentProfile';
 import AboutYourSelf from './user/profile/AboutYourSelf';
 import ForgetPassword from './user/forgetPassword/ForgetPassword';
@@ -47,7 +46,7 @@ export type RootStackParams = {
 
 const Stack = createNativeStackNavigator<RootStackParams>();
 
-const App = () => (
+const App: React.FC = () => (
   <NavigationContainer>
     <Stack.Navigator screenOptions={{headerShown: false}}>
       {/* user */}
@@ -80,5 +79,3 @@ const App = () => (
 );
 
 export default App;
-
-const styles = StyleSheet.create({});

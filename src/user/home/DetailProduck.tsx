@@ -28,15 +28,6 @@ interface listData {
   deskripsi: string;
 }
 
-interface LikeButtonProps {
-  postId: number;
-  no_id: number;
-}
-
-interface User {
-  id: string;
-}
-
 const DetailProduck = ({route}: Navigation) => {
   const [data, setData] = useState<listData[]>([]);
   const [liked, setLiked] = useState<boolean>(false);
@@ -55,7 +46,7 @@ const DetailProduck = ({route}: Navigation) => {
       };
 
       fetch(
-        `https://1c2c-2001-448a-404a-611e-d28c-b918-a2ae-498a.ngrok-free.app/api/read-user/${route.params?.no_id}`,
+        `https://kelompokx.muhammadiyahexpo.com/api/read-user/${route.params?.no_id}`,
         requestOptions,
       )
         .then(response => response.json())
@@ -80,7 +71,7 @@ const DetailProduck = ({route}: Navigation) => {
       setRequestOptions(requestOptions); // Set requestOptions value
 
       fetch(
-        `https://3466-2001-448a-4042-41bf-736a-29a5-6765-b487.ngrok-free.app/api/posts/73/like`,
+        `https://kelompokx.muhammadiyahexpo.com/api/posts/${route.params?.no_id}/like`,
         requestOptions,
       )
         .then(response => response.json())

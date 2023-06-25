@@ -27,20 +27,25 @@ interface listData {
 }
 
 const Edit = () => {
-  const [popup, setPopup] = useState(false);
-  const [popup2, setPopup2] = useState(false);
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParams>>();
+  const [popup, setPopup] = useState(false);
+  const [popup2, setPopup2] = useState(false);
   const [data, setData] = useState<listData[]>([]);
   const [selectedId, setSelectedId] = useState<number>(0);
+
+  // {'modal'}
   const handleEdit = (id: number) => {
     setPopup(true);
     setSelectedId(id);
   };
+
+  // { 'Modal Edit'}
   const HandleModalEdit = () => {
     setPopup(false);
     setPopup2(true);
   };
+
   useEffect(() => {
     AsyncStorage.getItem('token').then(value => {
       console.log('Ini token', value);
@@ -52,7 +57,7 @@ const Edit = () => {
         },
       };
       fetch(
-        'https://45a4-2001-448a-4042-41bf-e3dd-7625-3602-b07e.ngrok-free.app/api/beranda-user',
+        'https://kelompokx.muhammadiyahexpo.com/api/beranda-user',
         requestOptions,
       )
         .then(response => response.json())

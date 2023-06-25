@@ -65,7 +65,7 @@ const ForgetPassword = () => {
           },
         };
         fetch(
-          'https://d3ad-2001-448a-4040-8920-8f82-2cfc-3dfc-cbd7.ngrok-free.app/api/kirim-ulang',
+          'https://kelompokx.muhammadiyahexpo.com/api/kirim-ulang',
           requestOptions,
         )
           .then(response => response.json())

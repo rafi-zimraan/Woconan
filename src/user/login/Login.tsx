@@ -46,6 +46,14 @@ const Login = () => {
     }
   };
 
+  const saveRoll = async (userRole: any) => {
+    try {
+      await AsyncStorage.setItem('userRole', userRole);
+    } catch (e) {
+      console.log('gagal save role', e);
+    }
+  };
+
   const Log = () => {
     if (email === '') {
       Alert.alert('Perhatian !', 'Anda harus memasukan email terlebih dahulu', [
@@ -98,10 +106,7 @@ const Login = () => {
         redirect: 'follow',
       };
 
-      fetch(
-        'https://0fe4-2001-448a-404a-611e-10f2-e820-9d30-a30.ngrok-free.app/api/login',
-        requestOptions,
-      )
+      fetch('https://kelompokx.muhammadiyahexpo.com/api/login', requestOptions)
         .then(response => response.json())
         .then(result => {
           console.log(result);
@@ -114,11 +119,13 @@ const Login = () => {
             if (result.message == 'user login successful') {
               console.log('token', result.access_token);
               saveToken(result.access_token);
+              saveRoll('user');
               ToastAndroid.show('Selamat datang user', ToastAndroid.SHORT);
               navigation.replace('bottom');
-            } else if (result.message == 'admin login succesful') {
+            } else if (result.message == 'admin login successful') {
               console.log('token', result.access_token);
               saveToken(result.access_token);
+              saveRoll('admin');
               ToastAndroid.show('Selamat datang admin', ToastAndroid.SHORT);
               navigation.replace('homeAdmin');
             }

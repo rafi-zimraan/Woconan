@@ -128,7 +128,7 @@ const Register = () => {
         redirect: 'follow',
       };
       fetch(
-        'https://0fe4-2001-448a-404a-611e-10f2-e820-9d30-a30.ngrok-free.app/api/register',
+        'https://kelompokx.muhammadiyahexpo.com/api/register',
         requestOptions,
       )
         .then(response => response.json())

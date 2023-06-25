@@ -78,7 +78,7 @@ const ModalEdit: React.FC<Props> = ({visible, id}) => {
       };
 
       fetch(
-        `https://45a4-2001-448a-4042-41bf-e3dd-7625-3602-b07e.ngrok-free.app/api/update-postingan/${id}`,
+        `https://kelompokx.muhammadiyahexpo.com/api/update-postingan/${id}`,
         requestOptions,
       )
         .then(response => response.json())
