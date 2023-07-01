@@ -7,16 +7,13 @@ import {
   Image,
   TouchableNativeFeedback,
   TextInput,
-  Button,
   ScrollView,
   TouchableOpacity,
-  ActivityIndicator,
 } from 'react-native';
 import React, {useState} from 'react';
 import {Grey, White, krem} from '../utils/Colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {launchImageLibrary} from 'react-native-image-picker';
-import axios from 'axios';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {

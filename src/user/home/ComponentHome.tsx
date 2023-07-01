@@ -33,11 +33,12 @@ interface listData {
 const ComponentHome = () => {
   const [data, setData] = useState<listData[]>([]);
   const drawerRight = useRef<DrawerLayoutAndroid>(null);
-  // {'Navigation'}
+
+  //! {'Navigation'}
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParams>>();
 
-  // {'logout with application'}
+  // !{'logout with application'}
   const logout = () => {
     AsyncStorage.getItem('token').then(value => {
       var requestOptions = {
@@ -57,7 +58,7 @@ const ComponentHome = () => {
         .catch(error => console.log('error', error));
     });
   };
-  // {'Warning logout'}
+  // ! {'Warning logout'}
   const Warning = () => {
     Alert.alert('Perhatian !', 'Apakah anda ingin keluar', [
       {
@@ -85,7 +86,7 @@ const ComponentHome = () => {
     require('../icon/Noval3.png'),
   ];
 
-  // {'Read'}
+  // ! {'Read'}
   useEffect(() => {
     AsyncStorage.getItem('token').then(value => {
       console.log('Ini token', value);

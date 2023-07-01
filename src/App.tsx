@@ -21,6 +21,7 @@ import PasswordNew from './user/forgetPassword/PasswordNew';
 import DetailProduck from './user/home/DetailProduck';
 import ComponentHome from './user/home/ComponentHome';
 import OtpPasswordNew from './user/forgetPassword/OtpPasswordNew';
+import ModalComment from './user/home/ModalComment';
 
 export type RootStackParams = {
   splash: undefined;
@@ -42,6 +43,7 @@ export type RootStackParams = {
   detail: {no_id: number} | undefined;
   home: undefined;
   otpPassword: undefined;
+  modalComment: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParams>();
@@ -69,6 +71,7 @@ const App: React.FC = () => (
       />
       <Stack.Screen name={'home'} component={ComponentHome} />
       <Stack.Screen name={'otpPassword'} component={OtpPasswordNew} />
+      <Stack.Screen name={'modalComment'} component={ModalComment} />
       {/* admin */}
       <Stack.Screen name={'homeAdmin'} component={HomeAdmin} />
       <Stack.Screen name={'karyaUser'} component={KaryaUser} />

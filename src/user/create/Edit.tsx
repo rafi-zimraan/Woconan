@@ -101,11 +101,6 @@ const Edit = () => {
           ))}
         </ScrollView>
       </View>
-      <TouchableOpacity
-        style={styles.Push}
-        onPress={() => navigation.replace('bottom')}>
-        <Text style={styles.txt3}>Push in</Text>
-      </TouchableOpacity>
       <Popup
         visible={popup}
         onPress={() => setPopup(false)}

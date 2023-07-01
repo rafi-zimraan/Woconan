@@ -18,8 +18,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParams} from '../../App';
 import Modal from 'react-native-modal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import index from '../imageFlatlist';
-import {launchImageLibrary} from 'react-native-image-picker';
+import {useRoute, RouteProp} from '@react-navigation/native';
 
 interface listData {
   id: number;
@@ -36,20 +35,17 @@ const ComponentProfile = () => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(true);
   const [dataProfile, setDataProfile] = useState<listData[]>([]);
   const [data, setData] = useState<ProfileUserProps | null>();
-  const [name, setName] = useState<any>();
-  const [gambar, setGambar] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(true);
   const [token, setToken] = useState('');
-  const [isFollowing, setIsFollowing] = useState(false);
+  const [isFollowing, setIsFollowing] = useState<Boolean>(false);
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParams>>();
 
-  // {'Modal'}
+  // ! {'Modal'}
   const closeModal = () => {
     setIsModalVisible(false);
   };
 
-  // {'Profile User'}
+  // ! {'Profile User'}
   const fetch_data = (token: any) => {
     const requestOptions = {
       method: 'POST',
@@ -72,7 +68,7 @@ const ComponentProfile = () => {
       .catch(e => console.log(e));
   };
 
-  // {'tampilkan content'}
+  // ! {'tampilkan content'}
   const tampilkan_content = (token: any) => {
     var requestOptions = {
       method: 'POST',
@@ -91,6 +87,29 @@ const ComponentProfile = () => {
       .catch(error => console.log('error', error));
   };
 
+  // !{'following'}
+  const following = (token: any) => {
+    var requestOptions = {
+      method: 'POST',
+      redirect: 'follow',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    fetch(
+      'https://kelompokx.muhammadiyahexpo.com/api/users/43/follow',
+      requestOptions,
+    )
+      .then(response => response.json())
+      .then(result => {
+        console.log(result);
+        setIsFollowing(prevState => !prevState);
+      })
+      .catch(error => console.log('error', error));
+  };
+
+  // ! {'refresh all item'}
   useEffect(() => {
     const refresh = navigation.addListener('focus', () => {
       fetchProfileData();
@@ -98,21 +117,19 @@ const ComponentProfile = () => {
     return refresh;
   }, [navigation]);
 
-  // ['Api Profile User']
+  // ! ['Api Profile User']
   const fetchProfileData = async () => {
     try {
       const token = await AsyncStorage.getItem('token');
       setToken(token!);
+      const userId = await AsyncStorage.getItem('user_id');
+      console.log('userId', userId);
       fetch_data(token!);
     } catch (error) {
       console.log('Error:', error);
     }
   };
 
-  // {'Text Following"}
-  const HandleFollowing = () => {
-    setIsFollowing(prevState => !prevState);
-  };
   return (
     <View style={styles.Container}>
       <StatusBar
@@ -122,7 +139,16 @@ const ComponentProfile = () => {
       />
 
       {/* MODAL */}
-      <Modal isVisible={isModalVisible}>
+      <Modal
+        isVisible={isModalVisible}
+        backdropColor={Black}
+        backdropOpacity={0.8}
+        animationIn="zoomInDown"
+        animationOut="zoomOutUp"
+        animationInTiming={2000}
+        animationOutTiming={2000}
+        backdropTransitionInTiming={1000}
+        backdropTransitionOutTiming={1000}>
         <View style={styles.ContentModal}>
           <TouchableOpacity style={styles.ViewClose} onPress={closeModal}>
             <Text style={styles.TextClose}>Close</Text>
@@ -175,15 +201,11 @@ const ComponentProfile = () => {
           <TouchableOpacity
             style={[
               styles.ViewFollow,
-              {backgroundColor: isFollowing ? 'orange' : 'blue'},
+              {backgroundColor: isFollowing ? 'blue' : 'red'},
             ]}
-            onPress={HandleFollowing}>
-            <Text
-              style={[
-                styles.TxtViewFollow,
-                {color: isFollowing ? 'white' : 'white'},
-              ]}>
-              {isFollowing ? 'Following' : 'Follow'}
+            onPress={() => following(token)}>
+            <Text style={styles.TxtViewFollow}>
+              {isFollowing ? 'follow' : 'Unfollow'}
             </Text>
           </TouchableOpacity>
         </View>

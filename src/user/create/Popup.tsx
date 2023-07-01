@@ -12,7 +12,6 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import Axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -46,7 +45,7 @@ const Popup: React.FC<Props> = ({visible, onPress, onPress2, id}) => {
         `https://kelompokx.muhammadiyahexpo.com/api/delete-postingan/${id}`,
         requestOptions,
       )
-        .then(response => response.text())
+        .then(response => response.json())
         .then(result => {
           console.log(result);
           navigation.goBack();

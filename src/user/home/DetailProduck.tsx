@@ -7,7 +7,10 @@ import {
   View,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {
+  NativeStackNavigationProp,
+  NativeStackScreenProps,
+} from '@react-navigation/native-stack';
 import {RootStackParams} from '../../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
@@ -16,7 +19,7 @@ import {
 } from 'react-native-responsive-screen';
 import {Black, Grey, White} from '../utils/Colors';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-// import { LikeButtonProps } from './path/to/LikeButtonProps';
+import {useNavigation} from '@react-navigation/native';
 
 type Navigation = NativeStackScreenProps<RootStackParams, 'detail'>;
 
@@ -33,6 +36,17 @@ const DetailProduck = ({route}: Navigation) => {
   const [liked, setLiked] = useState<boolean>(false);
   const [likeCount, setLikeCount] = useState<number>(0);
   const [requestOptions, setRequestOptions] = useState<any>(null);
+  const [modalPop, setModalPop] = useState(false);
+  const [selectedId, setSelectedId] = useState<number>(0);
+
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParams>>();
+
+  // ! Modal
+  // const ModalCommennt = (id : number) => {
+  //   setModalPop(true)
+  //   setSelectedId(id)
+  // }
 
   useEffect(() => {
     console.log(route.params?.no_id);
@@ -58,7 +72,7 @@ const DetailProduck = ({route}: Navigation) => {
     });
   }, []);
 
-  // {'like'}
+  // ! {'like'}
   const handleLike = () => {
     AsyncStorage.getItem('token').then(value => {
       const requestOptions = {
@@ -68,6 +82,7 @@ const DetailProduck = ({route}: Navigation) => {
           Authorization: `Bearer ${value}`,
         },
       };
+
       setRequestOptions(requestOptions); // Set requestOptions value
 
       fetch(
@@ -95,16 +110,29 @@ const DetailProduck = ({route}: Navigation) => {
               style={{height: 485, width: 799}}
             />
             <Text style={styles.Judul}>{value.judul}</Text>
-            <TouchableOpacity onPress={() => handleLike()}>
-              <View>
-                <Icon
-                  name={liked ? 'heart' : 'heart'}
-                  size={30}
-                  color={liked ? 'red' : 'black'}
-                />
-                <Text>{likeCount}</Text>
-              </View>
-            </TouchableOpacity>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+                width: wp('50%'),
+              }}>
+              <TouchableOpacity onPress={() => handleLike()}>
+                <View style={{flexDirection: 'row'}}>
+                  <Icon
+                    name={liked ? 'heart' : 'heart'}
+                    size={30}
+                    color={liked ? 'red' : 'black'}
+                  />
+                  <Text style={{marginTop: '2%', marginLeft: '6%'}}>
+                    {likeCount}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('modalComment')}>
+                <Icon name="comment-processing-outline" size={30} />
+              </TouchableOpacity>
+            </View>
             <Text style={styles.Description}>{value.deskripsi}</Text>
           </View>
         ))}
