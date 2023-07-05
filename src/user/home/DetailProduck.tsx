@@ -1,4 +1,5 @@
 import {
+  FlatList,
   Image,
   ScrollView,
   StyleSheet,
@@ -20,6 +21,8 @@ import {
 import {Black, Grey, White} from '../utils/Colors';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
+import ModalComment from './ModalComment';
+import axios from 'axios';
 
 type Navigation = NativeStackScreenProps<RootStackParams, 'detail'>;
 
@@ -29,6 +32,7 @@ interface listData {
   gambar: string;
   judul: string;
   deskripsi: string;
+  id: number;
 }
 
 const DetailProduck = ({route}: Navigation) => {
@@ -36,17 +40,24 @@ const DetailProduck = ({route}: Navigation) => {
   const [liked, setLiked] = useState<boolean>(false);
   const [likeCount, setLikeCount] = useState<number>(0);
   const [requestOptions, setRequestOptions] = useState<any>(null);
-  const [modalPop, setModalPop] = useState(false);
+  const [isModalPop, setIsModalPop] = useState(false);
   const [selectedId, setSelectedId] = useState<number>(0);
+
+  interface Post {
+    id: number;
+    title: string;
+    content: string;
+  }
 
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParams>>();
+  const [posts, setPosts] = useState<Post[]>([]);
 
   // ! Modal
-  // const ModalCommennt = (id : number) => {
-  //   setModalPop(true)
-  //   setSelectedId(id)
-  // }
+  const ModalCommennt = (id: number) => {
+    setIsModalPop(true);
+    setSelectedId(id);
+  };
 
   useEffect(() => {
     console.log(route.params?.no_id);
@@ -128,15 +139,31 @@ const DetailProduck = ({route}: Navigation) => {
                   </Text>
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('modalComment')}>
-                <Icon name="comment-processing-outline" size={30} />
+              <TouchableOpacity onPress={() => ModalCommennt(value.id)}>
+                <Image
+                  source={require('../icon/chat.png')}
+                  style={{height: hp('4%'), width: wp('8%')}}
+                />
               </TouchableOpacity>
             </View>
             <Text style={styles.Description}>{value.deskripsi}</Text>
           </View>
         ))}
       </ScrollView>
+      {/* <FlatList
+        data={posts}
+        keyExtractor={item => item.id.toString()}
+        renderItem={({item}) => (
+          <TouchableOpacity onPress={() => handleCommentPress(item.id)}>
+            <Text>{item.title}</Text>
+          </TouchableOpacity>
+        )}
+      /> */}
+      <ModalComment
+        visible={isModalPop}
+        onPress={() => setIsModalPop(false)}
+        id={0}
+      />
     </View>
   );
 };

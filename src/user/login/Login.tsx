@@ -156,7 +156,7 @@ const Login = () => {
     checkToken();
   }, [navigation]);
 
-  // {'FORGET PASSWORD'}
+  // ! {'FORGET PASSWORD'}
   const forget = () => {
     if (forgetPassword === '') {
       Alert.alert('Perhatian !', 'apakah anda lupa kata sandi ?', [

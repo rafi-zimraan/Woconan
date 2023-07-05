@@ -40,10 +40,10 @@ export type RootStackParams = {
   aboutYouSelf: {token: any} | undefined;
   forgetPassword: undefined;
   passwordNew: undefined;
-  detail: {no_id: number} | undefined;
+  detail: {no_id: number};
   home: undefined;
   otpPassword: undefined;
-  modalComment: undefined;
+  modalComment: {postId: number};
 };
 
 const Stack = createNativeStackNavigator<RootStackParams>();

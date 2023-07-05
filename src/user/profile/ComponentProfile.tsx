@@ -122,8 +122,6 @@ const ComponentProfile = () => {
     try {
       const token = await AsyncStorage.getItem('token');
       setToken(token!);
-      const userId = await AsyncStorage.getItem('user_id');
-      console.log('userId', userId);
       fetch_data(token!);
     } catch (error) {
       console.log('Error:', error);
