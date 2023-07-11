@@ -20,7 +20,7 @@ import {
 } from 'react-native-responsive-screen';
 import {Black, Grey, White} from '../utils/Colors';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import ModalComment from './ModalComment';
 import axios from 'axios';
 
@@ -36,6 +36,8 @@ interface listData {
 }
 
 const DetailProduck = ({route}: Navigation) => {
+  const routeId = useRoute();
+  const {no_id} = routeId.params as {no_id: string};
   const [data, setData] = useState<listData[]>([]);
   const [liked, setLiked] = useState<boolean>(false);
   const [likeCount, setLikeCount] = useState<number>(0);
@@ -150,19 +152,14 @@ const DetailProduck = ({route}: Navigation) => {
           </View>
         ))}
       </ScrollView>
-      {/* <FlatList
-        data={posts}
-        keyExtractor={item => item.id.toString()}
-        renderItem={({item}) => (
-          <TouchableOpacity onPress={() => handleCommentPress(item.id)}>
-            <Text>{item.title}</Text>
-          </TouchableOpacity>
-        )}
-      /> */}
       <ModalComment
         visible={isModalPop}
         onPress={() => setIsModalPop(false)}
-        id={0}
+        konten={''}
+        post_id={no_id}
+        user_id={0}
+        fotoprofile={''}
+        jam={0}
       />
     </View>
   );
